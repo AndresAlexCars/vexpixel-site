@@ -1,0 +1,31 @@
+/* ═══ Galería sin huecos: horizontales a todo el ancho, verticales llenan los espacios ═══ */
+.wall-grid { grid-auto-flow: dense; }
+.wall-grid .wall-card--pc { grid-column: 1 / -1; }
+#vid-grid { grid-auto-flow: dense; }
+#vid-grid .video-card--wide { grid-column: 1 / -1; }
+
+/* ═══ Solo subida de fondos: se oculta el generador, el historial y el asistente ═══ */
+#view-create,
+#view-history,
+#chat,
+#nav-chat,
+[data-view-target="create"],
+[data-view-target="history"],
+[data-open-chat] { display: none !important; }
+
+/* ═══ Catálogos: chips horizontales ═══ */
+.cat-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: none; }
+.cat-row::-webkit-scrollbar { display: none; }
+.cat-chip {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .04);
+  color: #d8dce6;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.cat-chip[aria-pressed="true"] { background: #f5f5f5; color: #0b0c10; border-color: #f5f5f5; }

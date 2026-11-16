@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>VexPixel · Fondos y videos anime para móvil y PC</title>
+  <meta name="description" content="Descarga fondos de pantalla anime para tu móvil y tu PC, y videos animados en calidad original. Gratis y sin registro.">
+  <meta name="keywords" content="fondos anime, fondos de pantalla anime, wallpapers anime, videos anime, fondos para móvil, fondos para PC">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://jordvex.xyz/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VexPixel">
+  <meta property="og:title" content="VexPixel · Fondos y videos anime">
+  <meta property="og:description" content="Fondos de pantalla anime para móvil y PC, y videos animados. Descárgalos gratis.">
+  <meta property="og:url" content="https://jordvex.xyz/">
+  <meta property="og:image" content="https://jordvex.xyz/og.png">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VexPixel · Fondos y videos anime">
+  <meta name="twitter:description" content="Fondos de pantalla anime para móvil y PC, y videos animados. Descárgalos gratis.">
+  <meta name="twitter:image" content="https://jordvex.xyz/og.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"VexPixel","url":"https://jordvex.xyz/","inLanguage":"es","description":"Fondos de pantalla anime para móvil y PC, y videos animados."}</script>
+  <meta name="theme-color" content="#0d0c15">
+  <meta name="color-scheme" content="dark light">
+  <script src="/js/theme.js"></script>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/pulido.css">
+  <link rel="stylesheet" href="/css/jordvex-sections.css">
+  <style>.close-symbol{min-width:40px;min-height:40px;padding:0!important;display:inline-flex;align-items:center;justify-content:center;font-size:24px;line-height:1;font-weight:500;border-radius:12px}</style>
+  <script type="module" src="/js/app.js"></script>
+
+<style id="jordvex-visual-polish">
+/* JORDVEX · refinamiento visual: solo presentación, sin tocar lógica */
+:root{--jv-line:rgba(164,177,255,.16);--jv-glass:rgba(24,27,48,.88);--jv-accent:#83aaff;--jv-radius:20px}
+html{scroll-behavior:smooth}
+body{letter-spacing:.005em}
+header,.header,.topbar{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.wallpapers{padding-top:clamp(18px,3vw,28px)}
+.wallpapers .history__head{margin:0 2px 16px}
+.wallpapers .history__head h2{font-size:clamp(23px,5vw,29px);letter-spacing:-.035em;font-weight:800}
+.wallpapers .history__head p{line-height:1.5;opacity:.76}
+.wall-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;margin:16px 0 18px;border:1px solid var(--jv-line);border-radius:17px;background:rgba(9,12,27,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+.wall-tabs .wall-tab{min-height:43px;border:0;border-radius:12px;font-weight:700;transition:background .2s,transform .2s,box-shadow .2s}
+.wall-tabs .wall-tab[aria-selected="true"]{background:linear-gradient(135deg,#83aaff,#7196f2);color:#10182d;box-shadow:0 5px 16px rgba(105,145,255,.22)}
+.wall-tools{display:flex;flex-direction:column;gap:12px;margin:0 0 17px}
+.wall-search{width:100%;min-height:46px;border:1px solid var(--jv-line);border-radius:14px;padding:0 15px;background:rgba(255,255,255,.045)}
+.wall-filters{display:flex;gap:8px;flex-wrap:wrap}
+.wall-filters .chip{min-height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--jv-line);font-size:12px;font-weight:650}
+.wall-filters .chip[aria-pressed="true"]{background:rgba(127,165,255,.17);border-color:rgba(127,165,255,.55);color:#b8ceff}
+.wall-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:17px}
+.wall-grid>*{min-width:0;border:1px solid var(--jv-line)!important;border-radius:20px!important;overflow:hidden;background:linear-gradient(160deg,rgba(27,31,55,.98),rgba(15,18,34,.98))!important;box-shadow:0 10px 28px rgba(0,0,0,.2);transition:transform .18s,border-color .18s,box-shadow .18s}
+.wall-grid>*:active{transform:scale(.99)}
+.wall-grid img,.wall-grid video{display:block;width:100%;object-fit:cover}
+.wall-grid button{border-radius:13px;min-height:39px;font-weight:650}
+.wall-grid .btn{border:1px solid rgba(155,177,255,.22)}
+.nav{padding:9px 10px calc(9px + env(safe-area-inset-bottom));gap:5px;border:1px solid rgba(155,177,255,.15);border-bottom:0;border-radius:22px 22px 0 0;background:rgba(13,16,32,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 -8px 28px rgba(0,0,0,.22)}
+.nav button{min-width:0;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:14px;font-size:11px;font-weight:650;opacity:.78;transition:background .2s,color .2s,opacity .2s}
+.nav button[aria-current="page"],.nav button.active{opacity:1;background:rgba(126,164,255,.13);color:#a9c4ff}
+.nav button svg{width:20px;height:20px}
+.music-toggle{box-shadow:0 8px 24px rgba(0,0,0,.32);border:1px solid rgba(155,177,255,.28)}
+button,input,textarea{ -webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #91b2ff;outline-offset:3px}
+@media(min-width:700px){.wallpapers{max-width:980px;margin-inline:auto}.wall-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wall-tabs{max-width:520px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* SAKUGA / WALLPAPER LIBRARY · acabado editorial premium */
+.wall-library-count{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:7px 11px;border:1px solid rgba(137,167,255,.2);border-radius:999px;background:rgba(110,145,255,.08);color:#a9c4ff;font-size:11px;font-weight:750;letter-spacing:.04em}
+.wall-library-count:before{content:"";width:6px;height:6px;border-radius:50%;background:#8fbcff;box-shadow:0 0 10px #8fbcff}
+.wall-tools{position:relative}.wall-search{background:rgba(18,21,39,.82);box-shadow:0 8px 28px rgba(0,0,0,.12);transition:border-color .2s,box-shadow .2s}.wall-search:focus{border-color:rgba(130,170,255,.6);box-shadow:0 0 0 4px rgba(130,170,255,.09)}
+.wall-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}
+.wall-grid .wall-card{position:relative;isolation:isolate;border:1px solid rgba(165,185,255,.13)!important;border-radius:17px!important;background:#111426!important;box-shadow:0 7px 22px rgba(0,0,0,.18);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.wall-grid .wall-card:hover{transform:translateY(-4px);border-color:rgba(139,174,255,.42)!important;box-shadow:0 18px 36px rgba(0,0,0,.3),0 0 0 1px rgba(139,174,255,.08)}
+.wall-card__media{position:relative;overflow:hidden;background:linear-gradient(135deg,#171b31,#0b0d18)}
+.wall-card__media img{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;transition:transform .55s cubic-bezier(.2,.7,.2,1);display:block}
+.wall-card--pc .wall-card__media img{aspect-ratio:16/10}.wall-card__media:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(5,7,15,.5));pointer-events:none}
+.wall-card__quality{position:absolute;z-index:2;left:9px;top:9px;padding:5px 7px;border:1px solid rgba(255,255,255,.17);border-radius:7px;background:rgba(7,9,17,.68);backdrop-filter:blur(12px);font-size:8px;letter-spacing:.07em;font-weight:800;color:#dce6ff}
+.wall-card__info{padding:11px 11px 12px;gap:7px}.wall-card__info strong{font-size:12px;line-height:1.35;font-weight:750;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.wall-card__tag{font-size:10px;color:#8793b5;letter-spacing:.025em}.wall-card__dl{min-height:36px!important;width:100%;justify-content:center;font-size:11px!important;border-radius:10px!important}.wall-react{gap:6px}.wall-react__main,.wall-react__more{min-height:34px!important;border-radius:10px!important;background:rgba(255,255,255,.045)!important;border-color:rgba(160,180,255,.13)!important;font-size:11px}
+@media(min-width:560px){.wall-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.wall-card__info{padding:12px}}
+@media(min-width:900px){.wallpapers{max-width:1180px}.wall-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.wall-tabs{max-width:440px}.wall-tools{flex-direction:row;align-items:center}.wall-search{max-width:440px}.wall-filters{margin-left:auto}}
+@media(min-width:1250px){.wall-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(hover:hover){.wall-card:hover .wall-card__media img{transform:scale(1.045)}}
+</style>
+
+  <style>
+    .wall-load-more{height:2px;width:100%;grid-column:1/-1}
+    .wall-load-more[hidden]{display:none}
+  </style>
+<link rel="stylesheet" href="/css/ajustes.css">
+</head>
+<body data-view="create">
+  <header class="topbar">
+    <div class="brand">
+      <svg id="brand-star" class="brand-star" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 38 26 58 32 38 38 32 58 26 38 6 32 26 26Z" fill="currentColor"/></svg>
+      <span id="brand-name">VexPixel</span>
+    </div>
+    <p class="tagline" data-i18n="tagline">Fondos de pantalla descárgalo gratis</p>
+    <button type="button" class="gear" data-open-settings aria-label="Ajustes" data-i18n-aria="nav.settings">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+  </header>
+
+  <main class="app">
+    <section id="view-create" class="create" aria-label="Crear">
+      <div class="stage-wrap">
+        <div class="stage">
+          <div class="frame" id="frame" data-state="empty" aria-busy="false">
+            <div class="frame__empty">
+              <p class="frame__title" data-i18n="canvas.empty.title">Tu lienzo está vacío</p>
+              <p class="muted" data-i18n="canvas.empty.sub">Describe una escena y pulsa Generar.</p>
+            </div>
+            <div class="frame__loading" role="status">
+              <p class="frame__title" id="stage-text">Interpretando tu prompt</p>
+              <div class="bar" aria-hidden="true"><i></i></div>
+              <p class="muted" id="elapsed">0 s</p>
+            </div>
+            <div class="frame__error" role="alert">
+              <p class="frame__title" data-i18n="error.title">No se pudo generar</p>
+              <p class="muted" id="error-text"></p>
+              <button type="button" class="btn" id="retry" data-i18n="retry">Reintentar</button>
+            </div>
+            <img class="frame__img" id="result" alt="">
+          </div>
+
+          <div class="actions" id="actions" hidden>
+            <div class="actions__bar">
+              <a class="act" id="download" href="#" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 20h16"/></svg><span data-i18n="download">Guardar</span></a>
+              <button type="button" class="act" id="view-full"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg><span data-i18n="action.view">Ampliar</span></button>
+              <button type="button" class="act" id="like-current" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.3a2 2 0 0 0 2-1.7l1.4-9A2 2 0 0 0 19.7 9H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg><span data-i18n="action.like">Me gusta</span></button>
+              <button type="button" class="act" id="copy-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span data-i18n="action.copy">Copiar prompt</span></button>
+              <button type="button" class="act act--danger" id="remove" aria-label="Eliminar esta imagen" data-i18n-aria="remove.aria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg><span data-i18n="action.delete">Eliminar</span></button>
+            </div>
+            <div class="actions__more">
+              <a class="btn" id="open-tab" href="#" target="_blank" rel="noopener" data-i18n="action.open">Abrir en pestaña</a>
+              <button type="button" class="btn" id="use-prompt" data-i18n="action.use">Usar prompt</button>
+              <button type="button" class="btn" id="regenerate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg><span data-i18n="regenerate">Volver a generar</span></button>
+            </div>
+          </div>
+
+          <div class="result-info" id="result-info" hidden>
+            <p class="caption" id="caption"></p>
+            <div class="meta" id="meta"></div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <form class="controls" id="form" novalidate>
+        <div class="field">
+          <label class="field__label" for="prompt" data-i18n="prompt.label">Describe tu ilustración</label>
+          <div class="prompt-box">
+            <textarea id="prompt" data-i18n-placeholder="prompt.placeholder" rows="4" maxlength="800" placeholder="Una guerrera de pelo plateado bajo un cerezo en flor, al atardecer" autocomplete="off"></textarea>
+            <div class="prompt-box__bar">
+              <button type="button" class="btn btn--text" id="idea" data-i18n="idea">Dame una idea</button>
+              <button type="button" class="btn btn--text" id="prompt-paste" data-i18n="prompt.paste">Pegar</button>
+              <button type="button" class="btn btn--text" id="prompt-clear" data-i18n="prompt.clear">Limpiar</button>
+              <span class="muted" id="count">0/800</span>
+            </div>
+          </div>
+        </div>
+
+        <section class="field gen-group">
+          <div class="sec-title"><span class="field__label" data-i18n="legend.imageProvider">Generador de imagen</span><details class="info"><summary aria-label="Ver ayuda" title="Ayuda">i</summary><p class="muted hint">Cloudflare: gratis, tamaño fijo cuadrado. Pollinations: gratis, puedes elegir la proporción y la resolución.</p></details></div>
+          <div class="choices choices--seg" id="image-providers"></div>
+        </section>
+
+        <section class="field">
+          <div class="sec-title"><span class="field__label" data-i18n="legend.style">Estilo</span><details class="info"><summary aria-label="Ver ayuda" title="Ayuda">i</summary><p class="muted hint">Define el look general. Los estilos de fondo cambian la proporción sugerida.</p></details></div>
+          <div class="choices" id="styles"></div>
+        </section>
+
+        <section class="field field--fal field--size">
+          <div class="sec-title"><span class="field__label" data-i18n="legend.ratio">Proporción</span><details class="info"><summary aria-label="Ver ayuda" title="Ayuda">i</summary><p class="muted hint">Cuadrada, horizontal (PC) o vertical (móvil). Solo se aplica con Pollinations.</p></details></div>
+          <div class="choices" id="ratios"></div>
+        </section>
+
+        <section class="field field--fal field--size">
+          <div class="sec-title"><span class="field__label" data-i18n="legend.resolution">Resolución</span><details class="info"><summary aria-label="Ver ayuda" title="Ayuda">i</summary><p class="muted hint">Estándar, Alta o Máxima. Más resolución = imagen más detallada y tarda un poco más.</p></details></div>
+          <div class="choices choices--seg" id="resolutions"></div>
+        </section>
+
+        <section class="field field--fal">
+          <div class="sec-title"><span class="field__label" data-i18n="legend.model">Modelo</span><details class="info"><summary aria-label="Ver ayuda" title="Ayuda">i</summary><p class="muted hint">Rápido: respuesta en segundos. Calidad: más detalle, tarda más (solo Cloudflare).</p></details></div>
+          <div class="choices choices--seg" id="qualities"></div>
+        </section>
+
+        <div class="generate-bar">
+          <button class="btn btn--primary" id="generate" type="submit" data-i18n="generate">Generar</button>
+          <p class="muted estimate" id="estimate"></p>
+        </div>
+      </form>
+    </section>
+
+    <section id="view-wallpapers" class="wallpapers" aria-label="Fondos">
+      <div class="history__head">
+        <div>
+          <h2>WALLPAPER</h2>
+          <p class="muted">Una colección viva de wallpapers. Explora, descubre y descarga.</p><span class="wall-library-count" id="wall-count">0 fondos disponibles</span>
+        </div>
+      </div>
+      <div class="wall-tabs" role="tablist">
+        <button type="button" class="wall-tab" role="tab" data-tab="fondos" aria-selected="true">Wallpaper</button>
+        <button type="button" class="wall-tab" role="tab" data-tab="videos" aria-selected="false">Videos Beta</button>
+      </div>
+      <div class="wall-pane" id="pane-fondos">
+      <div class="wall-tools">
+        <input id="wall-search" class="wall-search" type="search" placeholder="Buscar fondo por nombre..." autocomplete="off" aria-label="Buscar fondo">
+        <div class="wall-filters" role="group" aria-label="Tipo de fondo">
+          <button type="button" class="chip" data-kind="todos" aria-pressed="true">Todos</button>
+          <button type="button" class="chip" data-kind="movil" aria-pressed="false">Móvil</button>
+          <button type="button" class="chip" data-kind="pc" aria-pressed="false">PC</button>
+        </div>
+      </div>
+      <div class="wall-grid" id="wall-grid"></div>
+      <p class="empty muted" id="wall-empty" hidden>Todavía no hay fondos publicados.</p>
+      </div>
+      <div class="wall-pane" id="pane-videos" hidden>
+        <p class="muted hint video-tip">en este partado esta versión beta, y subiremos mas videos con muena vibra nose preocupen.</p>
+        <div class="wall-grid" id="video-grid"></div>
+        <p class="empty muted" id="video-empty" hidden>Todavía no hay videos publicados.</p>
+      </div>
+      <details class="wall-admin" id="wall-admin">
+        <summary>Panel del administrador</summary>
+        <div class="wall-admin__body">
+          <input id="admin-code" type="password" autocomplete="off" placeholder="Código de administrador">
+          <select id="wall-kind" aria-label="Tipo de fondo">
+            <option value="movil">Móvil (vertical)</option>
+            <option value="pc">PC (horizontal)</option>
+          </select>
+          <input id="wall-title" type="text" maxlength="60" placeholder="Título del fondo">
+          <input id="wall-file" type="file" accept="image/png,image/jpeg,image/webp">
+          <button type="button" class="btn btn--primary" id="wall-upload">Subir Wallpaper</button>
+          <button type="button" class="btn" id="stats-download">Descargar estadísticas (CSV)</button>
+          <input id="music-file" type="file" accept="audio/*" aria-label="Música de fondo">
+          <button type="button" class="btn" id="music-upload">Subir Canción de Fondo</button>
+          <hr class="wall-sep">
+          <input id="video-file" type="file" accept="video/mp4,video/webm,video/quicktime">
+          <input id="video-title" type="text" maxlength="60" placeholder="Título del video">
+          <button type="button" class="btn btn--primary" id="video-upload">Subir videos</button>
+        </div>
+      </details>
+    </section>
+
+    <section id="view-history" class="history" aria-label="Historial">
+      <div class="history__head">
+        <div>
+          <h2 data-i18n="history.title">Historial</h2>
+          <p class="muted" id="history-count"></p>
+        </div>
+        <button type="button" class="btn btn--danger btn--sm" id="clear" data-i18n="history.clear" hidden>Borrar historial</button>
+      </div>
+      <input id="history-search" class="history__search" type="search" hidden data-i18n-placeholder="history.search" placeholder="Buscar por prompt o estilo">
+      <div class="grid" id="grid"></div>
+      <p class="empty muted" id="history-empty" data-i18n="history.empty">Aún no hay imágenes. Escribe una idea y pulsa Generar.</p>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Secciones">
+    <button type="button" data-view-target="create" aria-current="page">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+      <span data-i18n="nav.home">Inicio</span>
+    </button>
+    <button type="button" data-view-target="history">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      <span data-i18n="nav.history">Historial</span>
+    </button>
+    <button type="button" id="nav-fav">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.3a2 2 0 0 0 2-1.7l1.4-9A2 2 0 0 0 19.7 9H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+      <span data-i18n="nav.fav">Me gusta</span>
+    </button>
+    <button type="button" data-view-target="wallpapers">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg>
+      <span>wallpaper</span>
+    </button>
+    <button type="button" id="nav-chat">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+      <span data-i18n="nav.chat">Chat</span>
+    </button>
+  </nav>
+
+  <button type="button" class="music-toggle" id="music-toggle" aria-pressed="false" aria-label="Música de fondo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+  </button>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="settings" class="sheet" aria-label="Configuración">
+    <div class="sheet__head">
+      <h3>Configuración</h3>
+      <button type="button" class="btn btn--text close-symbol" data-close aria-label="Cerrar" title="Cerrar">✕</button>
+    </div>
+    <div class="sheet__body" id="settings-body"></div>
+    <div class="sheet__actions" style="padding:8px 16px 16px"><button type="button" class="btn" id="open-welcome">Ver novedades</button></div>
+  </dialog>
+
+  <dialog id="viewer" class="viewer" aria-label="Imagen">
+    <button type="button" class="viewer__close" data-close-viewer aria-label="Cerrar">✕</button>
+    <img id="viewer-img" alt="">
+  </dialog>
+
+  <dialog id="chat" class="sheet chat-sheet" aria-label="Asistente">
+    <div class="sheet__head">
+      <h3 data-i18n="chat.title">Asistente</h3>
+      <div class="chat__head-tools">
+        <select id="chat-provider" class="chat__select" aria-label="Proveedor">
+          <option value="cloudflare">Cloudflare · Llama 3.1 8B</option>
+          <option value="groq">Groq · Llama 3.1 8B</option>
+        </select>
+        <button type="button" class="btn btn--text close-symbol" data-close-chat aria-label="Cerrar" title="Cerrar">✕</button>
+      </div>
+    </div>
+    <div class="chat__log" id="chat-log" aria-live="polite"></div>
+    <form class="chat__form" id="chat-form">
+      <input id="chat-input" type="text" maxlength="1000" autocomplete="off" data-i18n-placeholder="chat.placeholder" placeholder="Pregunta algo o pide ideas...">
+      <button type="submit" class="btn btn--primary" id="chat-send" data-i18n="chat.send">Enviar</button>
+    </form>
+  </dialog>
+
+  <dialog id="welcome" class="sheet welcome" aria-label="Novedades">
+    <div class="sheet__head">
+      <h3>NOVEDADES · CAMBIOS NUEVOS</h3>
+      <button type="button" class="btn btn--text close-symbol" data-close-welcome aria-label="Cerrar" title="Cerrar">✕</button>
+    </div>
+    <div class="sheet__body">
+      <section class="sheet__section">
+        <h4>Esta versión</h4>
+        <ul class="welcome__list">
+          <li><strong>Anterior: </strong> Esto es un versión anterior solamente trae videos lo que se publican, y la calidad de los vídeos eso depende del archivo.</li>
+          <li><strong>Nuevo: Vista previa</strong>: es algo nuevo también, en vista previa puedes ver como se veria en un teléfono o un monitor.</li>
+          <li><strong>Nuevo: REACIONES</strong> esto es algo nuevo ahora puedes dar reacciones y también ver quien a visto los fondos.</li>
+          <li><strong>Nuevo: musica de fondo</strong> con esto puedes activar o desactivar con un toque.</li>
+          <li><strong>Instagram nuevo:</strong> pega un enlace de Instagram para descargar videos. <span class="muted">Esta es una versión beta, así que puede contener errores.</span></li>
+        </ul>
+      </section>
+      <p class="muted about">Esto son los cambios que eh cambiado por el momento.</p>
+      <div class="dialog__actions"><button type="button" class="btn btn--primary" data-close-welcome>Entendido</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="preview" class="preview-dialog" aria-label="Vista previa del fondo">
+    <button type="button" class="viewer__close" data-close-preview aria-label="Cerrar">✕</button>
+    <div class="preview-stage">
+      <div class="phone" id="phone-frame">
+        <div class="phone__screen" id="phone-screen">
+          <div class="phone__lock">
+            <p class="phone__date" id="phone-date"></p>
+            <p class="phone__time" id="phone-time"></p>
+          </div>
+          <div class="phone__home"><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirm">
+    <form method="dialog">
+      <h3 data-i18n="confirm.title">¿Borrar todo el historial?</h3>
+      <p class="muted" data-i18n="confirm.text">Se eliminarán todas tus imágenes de este dispositivo. No se puede deshacer.</p>
+      <div class="dialog__actions">
+        <button class="btn" value="cancel" data-i18n="confirm.cancel">Cancelar</button>
+        <button class="btn btn--danger-solid" value="ok" data-i18n="confirm.ok">Borrar todo</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="gate">
+    <form id="gate-form">
+      <h3 data-i18n="gate.title">Código de acceso</h3>
+      <p class="muted" data-i18n="gate.text">Esta app es privada. Introduce el código para continuar.</p>
+      <label class="sr-only" for="gate-input" data-i18n="gate.title">Código de acceso</label>
+      <input id="gate-input" type="password" autocomplete="current-password" required>
+      <p class="gate-error" id="gate-error" role="alert"></p>
+      <div class="dialog__actions">
+        <button class="btn btn--primary" type="submit" data-i18n="gate.enter">Entrar</button>
+      </div>
+    </form>
+  </dialog>
+  <section class="features" aria-label="Características">
+    <h2>Características</h2>
+    <div class="features__grid">
+      <article><h3>Descarga original</h3><p>Baja cada fondo en su calidad original, sin marca de agua.</p></article>
+      <article><h3>Favoritos</h3><p>Guarda los fondos que te gustan y mira tu lista con el icono de marcador.</p></article>
+      <article><h3>Compartir</h3><p>Envía un enlace directo a cualquier fondo.</p></article>
+      <article><h3>Búsqueda rápida</h3><p>Busca por nombre o entra en un catálogo con el icono #.</p></article>
+      <article><h3>Móvil y PC</h3><p>Fondos verticales para el móvil y horizontales para la computadora.</p></article>
+      <article><h3>Sin registro</h3><p>Entra y descarga sin crear cuenta.</p></article>
+    </div>
+  </section>
+</body>
+</html>

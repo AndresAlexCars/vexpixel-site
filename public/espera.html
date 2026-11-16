@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>⏳ Volvemos pronto | JORDVEX</title>
+  <meta name="theme-color" content="#0b0d18">
+  <link rel="stylesheet" href="/css/espera.css">
+</head>
+<body>
+  <!-- Vídeo de fondo desde Streamable (sin subir a GitHub) -->
+  <div class="bg-video-wrap" aria-hidden="true">
+    <iframe
+      class="bg-video"
+      src="https://streamable.com/e/81yg36?autoplay=1&muted=1&nocontrols=1"
+      allow="autoplay; fullscreen"
+      allowfullscreen
+      loading="eager"
+      title=""
+    ></iframe>
+  </div>
+  <div class="bg-overlay"></div>
+
+  <div class="content">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 38 26 58 32 38 38 32 58 26 38 6 32 26 26Z" fill="currentColor"/></svg>
+      <span>JORDVEX</span>
+    </div>
+
+    <div class="card">
+      <div class="badge" id="badge">En mantenimiento</div>
+      <div class="icon">⏳</div>
+      <h1 id="titulo">Volvemos pronto</h1>
+      <p class="msg" id="mensaje">
+        Hubo un error en nuestro sitio y estamos corrigiéndolo.<br>
+        Estamos preparando todo de nuevo para que funcione mejor.
+      </p>
+      <div id="tiempo">--:--:--</div>
+      <div class="label" id="etiqueta">Tiempo restante</div>
+      <div class="barra"><i id="barra"></i></div>
+      <p class="extra" id="extra">Gracias por tu paciencia. El servicio volverá a las 00:00.</p>
+
+      <ul class="lista" id="lista">
+        <li>Corrección de errores del servidor</li>
+        <li>Mejoras de estabilidad</li>
+        <li>Optimización para móviles</li>
+        <li>Preparando novedades</li>
+      </ul>
+    </div>
+
+    <div class="back" id="back" hidden>
+      <a href="/">← Ir al inicio</a>
+    </div>
+  </div>
+
+  <script src="/js/espera.js"></script>
+</body>
+</html>
