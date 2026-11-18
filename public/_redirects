@@ -10,3 +10,4 @@
 /sound/*      https://api.jordvex.xyz/sound/:splat    200
 /music/*      https://api.jordvex.xyz/music/:splat    200
 /healthz      https://api.jordvex.xyz/healthz         200
+/*      /index.html                          200
