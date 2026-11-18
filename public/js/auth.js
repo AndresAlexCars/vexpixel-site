@@ -1,5 +1,5 @@
 // Inicio de sesión, registro y perfil con Supabase (correo + contraseña).
-// La clave publicable puede estar en el navegador; la seguridad la dan las políticas RLS de la tabla profiles.
+// La clave publicable puede estar en el navegador; la seguridad la dan las políticas RLS y de Storage.
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/+esm';
 
 const SUPABASE_URL = 'https://mimwoqvbssiexkstvqbo.supabase.co';
@@ -10,16 +10,23 @@ const L = {
   es: { signin: 'Iniciar sesión', signout: 'Cerrar sesión', login: 'Entrar', signup: 'Crear cuenta',
         email: 'Correo', password: 'Contraseña', username: 'Nombre de usuario', age: 'Edad',
         gender: 'Género', male: 'Hombre', female: 'Mujer', other: 'Otro', save: 'Guardar',
-        profile: 'Mi perfil', saved: 'Guardado.', ageErr: 'Debes tener 18 años o más.',
-        confirm: 'Revisa tu correo para confirmar la cuenta.', err: 'No se pudo completar. Revisa tus datos.' },
+        profile: 'Mi perfil', saved: 'Guardado.', bio: 'Descripción', avatar: 'Foto de perfil',
+        banner: 'Banner', songs: 'Canciones', songTitle: 'Título de la canción', songFile: 'Archivo de audio',
+        addSong: 'Agregar canción', del: 'Borrar', noSongs: 'Aún no hay canciones.',
+        ageErr: 'Debes tener 18 años o más.', confirm: 'Revisa tu correo para confirmar la cuenta.',
+        err: 'No se pudo completar. Revisa tus datos.', uploading: 'Subiendo...' },
   en: { signin: 'Sign in', signout: 'Sign out', login: 'Log in', signup: 'Create account',
         email: 'Email', password: 'Password', username: 'Username', age: 'Age',
         gender: 'Gender', male: 'Male', female: 'Female', other: 'Other', save: 'Save',
-        profile: 'My profile', saved: 'Saved.', ageErr: 'You must be 18 or older.',
-        confirm: 'Check your email to confirm the account.', err: 'Could not complete. Check your details.' },
+        profile: 'My profile', saved: 'Saved.', bio: 'Description', avatar: 'Profile photo',
+        banner: 'Banner', songs: 'Songs', songTitle: 'Song title', songFile: 'Audio file',
+        addSong: 'Add song', del: 'Delete', noSongs: 'No songs yet.',
+        ageErr: 'You must be 18 or older.', confirm: 'Check your email to confirm the account.',
+        err: 'Could not complete. Check your details.', uploading: 'Uploading...' },
 };
 const lang = () => (document.documentElement.lang || navigator.language || 'es').startsWith('en') ? 'en' : 'es';
 const tx = () => L[lang()];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const btn = document.getElementById('signin-btn');
 if (btn) {
@@ -53,36 +60,57 @@ if (btn) {
     </form>`;
   document.body.appendChild(dlg);
 
-  // ── Diálogo de perfil (cuando ya hay sesión) ──
+  // ── Diálogo de perfil ──
   const pdlg = document.createElement('dialog');
-  pdlg.className = 'auth-dialog';
+  pdlg.className = 'auth-dialog profile-dialog';
   pdlg.innerHTML = `
-    <form method="dialog" class="auth-form" id="profile-form">
-      <p class="auth-title" data-p="profile"></p>
-      <label><span data-f="username"></span><input name="username" maxlength="24" required></label>
-      <label><span data-f="age"></span><input name="age" type="number" min="18" max="120" required></label>
-      <label><span data-f="gender"></span>
-        <select name="gender">
-          <option value="hombre" data-g="male"></option>
-          <option value="mujer" data-g="female"></option>
-          <option value="otro" data-g="other"></option>
-        </select>
-      </label>
-      <p class="auth-msg" role="status"></p>
-      <div class="auth-actions">
-        <button type="button" class="auth-signout"></button>
-        <button type="button" class="auth-cancel">×</button>
-        <button type="submit" class="auth-submit"></button>
+    <div class="pf">
+      <div class="pf-banner" id="pf-banner"><label class="pf-pick"><span data-p="banner"></span>
+        <input type="file" accept="image/*" id="pf-banner-file" hidden></label></div>
+      <div class="pf-head">
+        <label class="pf-avatar" id="pf-avatar"><img alt=""><span data-p="avatar"></span>
+          <input type="file" accept="image/*" id="pf-avatar-file" hidden></label>
+        <button type="button" class="auth-cancel pf-close">×</button>
       </div>
-    </form>`;
+      <form id="profile-form" class="auth-form">
+        <label><span data-f="username"></span><input name="username" maxlength="24" required></label>
+        <label><span data-f="age"></span><input name="age" type="number" min="18" max="120" required></label>
+        <label><span data-f="gender"></span>
+          <select name="gender">
+            <option value="hombre" data-g="male"></option>
+            <option value="mujer" data-g="female"></option>
+            <option value="otro" data-g="other"></option>
+          </select>
+        </label>
+        <label><span data-p="bio"></span><textarea name="bio" maxlength="300" rows="3"></textarea></label>
+        <p class="auth-msg" role="status"></p>
+        <div class="auth-actions">
+          <button type="button" class="auth-signout"></button>
+          <button type="submit" class="auth-submit"></button>
+        </div>
+      </form>
+      <div class="pf-songs">
+        <h3 data-p="songs"></h3>
+        <div id="pf-song-list"></div>
+        <form id="song-form" class="auth-form">
+          <label><span data-p="songTitle"></span><input name="title" maxlength="60" required></label>
+          <label><span data-p="songFile"></span><input name="file" type="file" accept="audio/*" required></label>
+          <p class="auth-msg" role="status"></p>
+          <button type="submit" class="auth-submit" data-p="addSong"></button>
+        </form>
+      </div>
+    </div>`;
   document.body.appendChild(pdlg);
 
   let mode = 'login';
   let profile = null;
+  let uid = null;
   const form = dlg.querySelector('#auth-form');
   const msg = dlg.querySelector('.auth-msg');
   const pform = pdlg.querySelector('#profile-form');
-  const pmsg = pdlg.querySelector('.auth-msg');
+  const pmsg = pform.querySelector('.auth-msg');
+  const sform = pdlg.querySelector('#song-form');
+  const smsg = sform.querySelector('.auth-msg');
 
   function paint() {
     const s = tx();
@@ -94,23 +122,24 @@ if (btn) {
     dlg.querySelectorAll('.auth-tabs button').forEach((b) => b.classList.toggle('on', b.dataset.mode === mode));
     dlg.querySelector('.auth-signup').hidden = mode !== 'signup';
 
-    pdlg.querySelector('[data-p="profile"]').textContent = s.profile;
+    pdlg.querySelectorAll('[data-p]').forEach((el) => (el.textContent = s[el.dataset.p]));
     pdlg.querySelectorAll('[data-f]').forEach((el) => (el.textContent = s[el.dataset.f]));
     pdlg.querySelectorAll('[data-g]').forEach((el) => (el.textContent = s[el.dataset.g]));
-    pdlg.querySelector('.auth-submit').textContent = s.save;
-    pdlg.querySelector('.auth-signout').textContent = s.signout;
+    pform.querySelector('.auth-submit').textContent = s.save;
+    pform.querySelector('.auth-signout').textContent = s.signout;
   }
 
   dlg.querySelectorAll('.auth-tabs button').forEach((b) => b.addEventListener('click', () => {
     mode = b.dataset.mode; msg.textContent = ''; paint();
   }));
   dlg.querySelector('.auth-cancel').addEventListener('click', () => dlg.close());
-  pdlg.querySelector('.auth-cancel').addEventListener('click', () => pdlg.close());
-  pdlg.querySelector('.auth-signout').addEventListener('click', async () => {
+  pdlg.querySelector('.pf-close').addEventListener('click', () => pdlg.close());
+  pform.querySelector('.auth-signout').addEventListener('click', async () => {
     await sb.auth.signOut();
     pdlg.close();
   });
 
+  // ── Entrar / registrar ──
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const s = tx();
@@ -128,8 +157,7 @@ if (btn) {
         if (error) throw error;
         if (data.session) {
           const { error: upErr } = await sb.from('profiles').update({
-            username: f.username.trim() || f.email.split('@')[0],
-            age, gender: f.gender,
+            username: f.username.trim() || f.email.split('@')[0], age, gender: f.gender,
           }).eq('id', data.user.id);
           if (upErr) throw upErr;
           dlg.close();
@@ -142,6 +170,7 @@ if (btn) {
     }
   });
 
+  // ── Guardar datos del perfil ──
   pform.addEventListener('submit', async (e) => {
     e.preventDefault();
     const s = tx();
@@ -150,21 +179,106 @@ if (btn) {
     const age = Number(f.age);
     if (!age || age < 18) { pmsg.textContent = s.ageErr; return; }
     try {
-      const { data: { session } } = await sb.auth.getSession();
+      const username = f.username.trim();
       const { error } = await sb.from('profiles').update({
-        username: f.username.trim(), age, gender: f.gender,
-      }).eq('id', session.user.id);
+        username, age, gender: f.gender, bio: f.bio.trim(),
+      }).eq('id', uid);
       if (error) throw error;
-      profile = { username: f.username.trim(), age, gender: f.gender };
-      btn.textContent = profile.username;
+      profile = { ...profile, username, age, gender: f.gender, bio: f.bio.trim() };
+      btn.textContent = username;
       pmsg.textContent = s.saved;
     } catch (err) {
       pmsg.textContent = err?.message ? err.message : s.err;
     }
   });
 
-  async function loadProfile(session) {
-    const { data } = await sb.from('profiles').select('username,age,gender').eq('id', session.user.id).single();
+  // ── Subir foto y banner ──
+  async function subirImagen(bucket, campo, file) {
+    const path = `${uid}/${campo}-${Date.now()}`;
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const { error: upErr } = await sb.storage.from(bucket).upload(`${path}.${ext}`, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+    const url = sb.storage.from(bucket).getPublicUrl(`${path}.${ext}`).data.publicUrl;
+    const { error } = await sb.from('profiles').update({ [campo === 'avatar' ? 'avatar_url' : 'banner_url']: url }).eq('id', uid);
+    if (error) throw error;
+    return url;
+  }
+  pdlg.querySelector('#pf-avatar-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    try {
+      const url = await subirImagen('avatars', 'avatar', file);
+      profile = { ...profile, avatar_url: url };
+      pintarPerfil();
+    } catch (err) { pmsg.textContent = err?.message || tx().err; }
+  });
+  pdlg.querySelector('#pf-banner-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    try {
+      const url = await subirImagen('banners', 'banner', file);
+      profile = { ...profile, banner_url: url };
+      pintarPerfil();
+    } catch (err) { pmsg.textContent = err?.message || tx().err; }
+  });
+
+  // ── Canciones ──
+  async function cargarCanciones() {
+    const list = pdlg.querySelector('#pf-song-list');
+    const { data, error } = await sb.from('songs').select('id,title,file_url').eq('user_id', uid).order('created_at', { ascending: false });
+    if (error) { list.textContent = error.message; return; }
+    if (!data.length) { list.innerHTML = `<p class="pf-empty">${esc(tx().noSongs)}</p>`; return; }
+    list.innerHTML = data.map((c) => `
+      <div class="pf-song" data-id="${esc(c.id)}">
+        <strong>${esc(c.title)}</strong>
+        <audio controls preload="none" src="${esc(c.file_url)}"></audio>
+        <button type="button" class="auth-cancel" data-del="${esc(c.id)}">${esc(tx().del)}</button>
+      </div>`).join('');
+    list.querySelectorAll('[data-del]').forEach((b) => b.addEventListener('click', async () => {
+      const row = data.find((c) => c.id === b.dataset.del);
+      const path = decodeURIComponent(new URL(row.file_url).pathname.split('/canciones/')[1] || '');
+      if (path) await sb.storage.from('canciones').remove([path]);
+      await sb.from('songs').delete().eq('id', row.id);
+      cargarCanciones();
+    }));
+  }
+
+  sform.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const s = tx();
+    const fd = new FormData(sform);
+    const title = String(fd.get('title') || '').trim();
+    const file = fd.get('file');
+    smsg.textContent = s.uploading;
+    try {
+      const path = `${uid}/${Date.now()}-${file.name.replace(/[^\w.-]/g, '_')}`;
+      const { error: upErr } = await sb.storage.from('canciones').upload(path, file, { contentType: file.type });
+      if (upErr) throw upErr;
+      const url = sb.storage.from('canciones').getPublicUrl(path).data.publicUrl;
+      const { error } = await sb.from('songs').insert({ user_id: uid, title, file_url: url });
+      if (error) throw error;
+      sform.reset();
+      smsg.textContent = '';
+      cargarCanciones();
+    } catch (err) {
+      smsg.textContent = err?.message || s.err;
+    }
+  });
+
+  // ── Pintar el perfil ──
+  function pintarPerfil() {
+    const banner = pdlg.querySelector('#pf-banner');
+    banner.style.backgroundImage = profile?.banner_url ? `url("${profile.banner_url}")` : '';
+    const img = pdlg.querySelector('#pf-avatar img');
+    img.src = profile?.avatar_url || '';
+    img.hidden = !profile?.avatar_url;
+    pform.username.value = profile?.username || '';
+    pform.age.value = profile?.age || '';
+    pform.gender.value = profile?.gender || 'hombre';
+    pform.bio.value = profile?.bio || '';
+  }
+
+  async function loadProfile() {
+    const { data } = await sb.from('profiles')
+      .select('username,age,gender,bio,avatar_url,banner_url').eq('id', uid).single();
     profile = data;
     return data;
   }
@@ -172,12 +286,12 @@ if (btn) {
   btn.addEventListener('click', async () => {
     const { data } = await sb.auth.getSession();
     if (data.session) {
-      const p = profile || await loadProfile(data.session);
-      pform.username.value = p?.username || '';
-      pform.age.value = p?.age || '';
-      pform.gender.value = p?.gender || 'hombre';
-      pmsg.textContent = '';
+      uid = data.session.user.id;
+      await loadProfile();
       paint();
+      pintarPerfil();
+      pmsg.textContent = '';
+      cargarCanciones();
       pdlg.showModal();
       return;
     }
@@ -187,9 +301,11 @@ if (btn) {
 
   sb.auth.onAuthStateChange(async (_event, session) => {
     if (session) {
-      const p = await loadProfile(session);
+      uid = session.user.id;
+      const p = await loadProfile();
       btn.textContent = p?.username || tx().signout;
     } else {
+      uid = null;
       profile = null;
       btn.textContent = tx().signin;
     }
