@@ -120,7 +120,7 @@ export function formatVideo(item) {
     mime: item.mime,
     codec: item.codec || '',
     createdAt: item.createdAt,
-    url: item.file ? `/videos/${item.file}` : '',
+    url: item.file ? `https://pub-95ceef72362449beadff05b7d09ed145.r2.dev/videos/${item.file}` : '',
     downloadName: item.file ? `jordvex-video-${item.id.slice(0, 8)}.${item.file.split('.').pop()}` : '',
   };
 }
