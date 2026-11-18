@@ -1,0 +1,13 @@
+# Dependencias y secretos: nunca subir
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Datos locales generados por el servidor
+data/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+{
+  "name": "vexpixel",
+  "version": "1.0.0",
+  "description": "VexPixel (JORDVEX): wallpapers y videos. Sitio en Cloudflare Pages; API Express detrás de Cloudflare Tunnel desde Termux.",
+  "private": true,
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "check": "node --check server/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "compression": "^1.7.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
+  }
+}
