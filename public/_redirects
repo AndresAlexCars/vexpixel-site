@@ -3,7 +3,6 @@
 # status 200 = reescritura (proxy), la URL del navegador no cambia.
 # Nota: /api/instagram/* lo atiende la Pages Function (functions/api/instagram/download.js) por _routes.json.
 
-/api/*        https://api.jordvex.xyz/api/:splat      200
 /wallpapers/* https://api.jordvex.xyz/wallpapers/:splat 200
 /videos/*     https://api.jordvex.xyz/videos/:splat   200
 /media/*      https://api.jordvex.xyz/media/:splat    200
