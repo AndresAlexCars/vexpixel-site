@@ -1561,3 +1561,20 @@ Añadido descargador de Instagram
 .preview-footer{display:flex;justify-content:center;gap:8px;align-items:center;color:#777186;font-size:10px;padding-top:10px;border-top:1px solid #ffffff0c}.preview-footer span{color:var(--accent)}
 .preview-dialog:has(.monitor) .preview-stage{display:block}.preview-dialog .monitor{width:min(86vw,650px);aspect-ratio:16/10;border-radius:18px;padding:9px 9px 28px;background:linear-gradient(145deg,#55545d,#111116 35%,#050507);box-shadow:0 30px 65px #0009,inset 0 0 0 1px #ffffff25}.preview-dialog .monitor::after{width:90px;height:7px;margin-left:-45px;bottom:9px;background:#555}.preview-dialog .monitor .phone__screen{border-radius:8px}.preview-dialog .monitor .phone__time{font-size:clamp(28px,7vw,60px)}
 @media(max-width:480px){.preview-dialog{padding:25px 10px 15px;border-radius:22px}.preview-stage{gap:12px}.preview-dialog .phone{width:clamp(118px,39vw,170px)}.preview-head{margin-bottom:18px}.preview-dialog .viewer__close{top:8px;right:8px}}
+
+
+/* Botón Iniciar sesión / Sign in (barra superior, derecha) */
+.signin-btn {
+  margin-left: auto;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--text, inherit);
+  font: inherit;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.signin-btn:hover { color: var(--accent); border-color: var(--accent); }
