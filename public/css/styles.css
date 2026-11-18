@@ -1611,3 +1611,29 @@ Añadido descargador de Instagram
 }
 .auth-cancel { background: transparent; border: 1px solid var(--line); color: #aab0d6; }
 .auth-submit { background: #5b6cf0; border: 0; color: #fff; font-weight: 600; }
+
+/* Perfil: banner, foto, descripción y canciones */
+.profile-dialog { width: min(94vw, 460px); max-height: 92vh; overflow: auto; }
+.pf-banner {
+  height: 140px; background: #1b2140 center/cover no-repeat; position: relative;
+  border-radius: 18px 18px 0 0;
+}
+.pf-pick { position: absolute; right: 10px; bottom: 10px; padding: 6px 10px; border-radius: 8px;
+  background: rgba(0,0,0,.55); color: #fff; font-size: 13px; cursor: pointer; }
+.pf-head { display: flex; align-items: flex-end; justify-content: space-between; padding: 0 20px; margin-top: -40px; }
+.pf-avatar { width: 84px; height: 84px; border-radius: 50%; overflow: hidden; border: 3px solid #13172b;
+  background: #232a4d; display: grid; place-items: center; color: #aab0d6; font-size: 11px; cursor: pointer; text-align: center; }
+.pf-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pf-close { margin-bottom: 6px; }
+.pf-songs { padding: 0 20px 20px; display: grid; gap: 12px; }
+.pf-songs h3 { margin: 8px 0 0; font-size: 16px; color: #eef0ff; }
+.pf-song { display: grid; gap: 6px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; }
+.pf-song audio { width: 100%; }
+.pf-song button { justify-self: end; }
+.pf-empty { color: #aab0d6; font-size: 14px; margin: 0; }
+.auth-form textarea {
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: #0d1020;
+  color: #eef0ff; font: inherit; font-size: 16px; resize: vertical; width: 100%; box-sizing: border-box;
+}
+.auth-form input[type="file"] { height: auto; padding: 8px; }
+.auth-signout { background: transparent; border: 1px solid var(--line); color: #ffb4b4; height: 40px; padding: 0 14px; border-radius: 10px; font: inherit; cursor: pointer; }
