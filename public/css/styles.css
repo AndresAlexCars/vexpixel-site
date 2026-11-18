@@ -1578,3 +1578,36 @@ Añadido descargador de Instagram
   cursor: pointer;
 }
 .signin-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+
+/* Formulario de inicio de sesión / registro */
+.auth-dialog {
+  width: min(92vw, 380px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #13172b;
+  color: #eef0ff;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.auth-dialog::backdrop { background: rgba(0,0,0,.6); }
+.auth-form { display: grid; gap: 12px; padding: 20px; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.auth-tabs button {
+  height: 38px; border-radius: 10px; border: 1px solid var(--line);
+  background: transparent; color: #aab0d6; font: inherit; cursor: pointer;
+}
+.auth-tabs button.on { background: #5b6cf0; border-color: #5b6cf0; color: #fff; }
+.auth-form label { display: grid; gap: 6px; font-size: 14px; color: #aab0d6; }
+.auth-form input, .auth-form select {
+  height: 42px; padding: 0 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: #0d1020; color: #eef0ff;
+  font: inherit; font-size: 16px; box-sizing: border-box; width: 100%;
+}
+.auth-msg { min-height: 1.2em; margin: 0; font-size: 14px; color: #ffb4b4; }
+.auth-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.auth-cancel, .auth-submit {
+  height: 40px; padding: 0 16px; border-radius: 10px; font: inherit; cursor: pointer;
+}
+.auth-cancel { background: transparent; border: 1px solid var(--line); color: #aab0d6; }
+.auth-submit { background: #5b6cf0; border: 0; color: #fff; font-weight: 600; }
