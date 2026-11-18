@@ -24,7 +24,7 @@ const tx = () => L[lang()];
 const btn = document.getElementById('signin-btn');
 if (btn) {
   const dlg = document.createElement('dialog');
-  dlg.className = 'sheet auth-dialog';
+  dlg.className = 'auth-dialog';
   dlg.innerHTML = `
     <form method="dialog" class="auth-form" id="auth-form">
       <div class="auth-tabs">
