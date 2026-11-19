@@ -195,16 +195,29 @@ if (btn) {
   });
 
   // ── Subir foto y banner ──
+  async function reducirImagen(file, maxLado = 1600) {
+    if (!file.type.startsWith('image/')) return file;
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, maxLado / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * k);
+    canvas.height = Math.round(bmp.height * k);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.85));
+    return blob || file;
+  }
+
   async function subirImagen(bucket, campo, file) {
-    const path = `${uid}/${campo}-${Date.now()}`;
-    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    const { error: upErr } = await sb.storage.from(bucket).upload(`${path}.${ext}`, file, { contentType: file.type });
+    const img = await reducirImagen(file);
+    const path = `${uid}/${campo}-${Date.now()}.jpg`;
+    const { error: upErr } = await sb.storage.from(bucket).upload(path, img, { contentType: 'image/jpeg' });
     if (upErr) throw upErr;
-    const url = sb.storage.from(bucket).getPublicUrl(`${path}.${ext}`).data.publicUrl;
+    const url = sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
     const { error } = await sb.from('profiles').update({ [campo === 'avatar' ? 'avatar_url' : 'banner_url']: url }).eq('id', uid);
     if (error) throw error;
     return url;
   }
+
   async function alSubirImagen(bucket, campo, file) {
     pmsg.textContent = tx().uploading;
     try {
@@ -289,19 +302,23 @@ if (btn) {
   }
 
   btn.addEventListener('click', async () => {
-    const { data } = await sb.auth.getSession();
-    if (data.session) {
-      uid = data.session.user.id;
-      await loadProfile();
-      paint();
-      pintarPerfil();
-      pmsg.textContent = '';
-      cargarCanciones();
-      pdlg.showModal();
-      return;
+    try {
+      const { data } = await sb.auth.getSession();
+      if (data.session) {
+        uid = data.session.user.id;
+        paint();
+        pmsg.textContent = '';
+        pdlg.showModal();
+        await loadProfile();
+        pintarPerfil();
+        cargarCanciones();
+        return;
+      }
+      mode = 'login'; msg.textContent = ''; paint();
+      dlg.showModal();
+    } catch (err) {
+      alert('Error: ' + (err?.message || err));
     }
-    mode = 'login'; msg.textContent = ''; paint();
-    dlg.showModal();
   });
 
   sb.auth.onAuthStateChange(async (_event, session) => {
