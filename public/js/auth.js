@@ -207,13 +207,29 @@ if (btn) {
     return blob || file;
   }
 
+  // Espera una promesa, pero avisa si tarda más de lo permitido
+  function conTiempo(promesa, ms, paso) {
+    return Promise.race([
+      promesa,
+      new Promise((_, rej) => setTimeout(() => rej(new Error('Se quedó en el paso: ' + paso)), ms)),
+    ]);
+  }
+
   async function subirImagen(bucket, campo, file) {
-    const img = await reducirImagen(file);
+    pmsg.textContent = 'Paso 1/3: reduciendo la imagen...';
+    const img = await conTiempo(reducirImagen(file), 30000, 'reducir imagen');
+
+    pmsg.textContent = 'Paso 2/3: subiendo el archivo...';
     const path = `${uid}/${campo}-${Date.now()}.jpg`;
-    const { error: upErr } = await sb.storage.from(bucket).upload(path, img, { contentType: 'image/jpeg' });
+    const { error: upErr } = await conTiempo(
+      sb.storage.from(bucket).upload(path, img, { contentType: 'image/jpeg' }), 90000, 'subir archivo');
     if (upErr) throw upErr;
+
+    pmsg.textContent = 'Paso 3/3: guardando el enlace...';
     const url = sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
-    const { error } = await sb.from('profiles').update({ [campo === 'avatar' ? 'avatar_url' : 'banner_url']: url }).eq('id', uid);
+    const { error } = await conTiempo(
+      sb.from('profiles').update({ [campo === 'avatar' ? 'avatar_url' : 'banner_url']: url }).eq('id', uid),
+      30000, 'guardar enlace');
     if (error) throw error;
     return url;
   }
