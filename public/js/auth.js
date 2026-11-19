@@ -196,7 +196,7 @@ if (btn) {
   async function subirImagen(bucket, campo, file) {
     const path = `${uid}/${campo}-${Date.now()}`;
     const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    const { error: upErr } = await sb.storage.from(bucket).upload(`${path}.${ext}`, file, { upsert: true, contentType: file.type });
+    const { error: upErr } = await sb.storage.from(bucket).upload(`${path}.${ext}`, file, { contentType: file.type });
     if (upErr) throw upErr;
     const url = sb.storage.from(bucket).getPublicUrl(`${path}.${ext}`).data.publicUrl;
     const { error } = await sb.from('profiles').update({ [campo === 'avatar' ? 'avatar_url' : 'banner_url']: url }).eq('id', uid);
