@@ -4,7 +4,9 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 const SUPABASE_URL = 'https://mimwoqvbssiexkstvqbo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_JRWU4J2TrpVF5eahhVBxaA_8JB4633R';
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage },
+});
 
 const L = {
   es: { signin: 'Iniciar sesión', signout: 'Cerrar sesión', login: 'Entrar', signup: 'Crear cuenta',
@@ -203,21 +205,24 @@ if (btn) {
     if (error) throw error;
     return url;
   }
-  pdlg.querySelector('#pf-avatar-file').addEventListener('change', async (e) => {
-    const file = e.target.files[0]; if (!file) return;
+  async function alSubirImagen(bucket, campo, file) {
+    pmsg.textContent = tx().uploading;
     try {
-      const url = await subirImagen('avatars', 'avatar', file);
-      profile = { ...profile, avatar_url: url };
+      const url = await subirImagen(bucket, campo, file);
+      profile = { ...profile, [campo === 'avatar' ? 'avatar_url' : 'banner_url']: url };
       pintarPerfil();
-    } catch (err) { pmsg.textContent = err?.message || tx().err; }
+      pmsg.textContent = tx().saved;
+    } catch (err) {
+      const texto = (err?.message || tx().err);
+      pmsg.textContent = 'Error al subir: ' + texto;
+      alert('Error al subir: ' + texto);
+    }
+  }
+  pdlg.querySelector('#pf-avatar-file').addEventListener('change', (e) => {
+    const file = e.target.files[0]; if (file) alSubirImagen('avatars', 'avatar', file);
   });
-  pdlg.querySelector('#pf-banner-file').addEventListener('change', async (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    try {
-      const url = await subirImagen('banners', 'banner', file);
-      profile = { ...profile, banner_url: url };
-      pintarPerfil();
-    } catch (err) { pmsg.textContent = err?.message || tx().err; }
+  pdlg.querySelector('#pf-banner-file').addEventListener('change', (e) => {
+    const file = e.target.files[0]; if (file) alSubirImagen('banners', 'banner', file);
   });
 
   // ── Canciones ──
