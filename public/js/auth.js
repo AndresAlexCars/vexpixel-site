@@ -317,11 +317,10 @@ if (btn) {
     return data;
   }
 
+  // Al tocar el botón se usa la sesión ya cargada (uid), sin esperar a getSession().
   btn.addEventListener('click', async () => {
     try {
-      const { data } = await sb.auth.getSession();
-      if (data.session) {
-        uid = data.session.user.id;
+      if (uid) {
         paint();
         pmsg.textContent = '';
         pdlg.showModal();
