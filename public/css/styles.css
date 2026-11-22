@@ -1637,3 +1637,25 @@ Añadido descargador de Instagram
 }
 .auth-form input[type="file"] { height: auto; padding: 8px; }
 .auth-signout { background: transparent; border: 1px solid var(--line); color: #ffb4b4; height: 40px; padding: 0 14px; border-radius: 10px; font: inherit; cursor: pointer; }
+
+/* Perfil como página completa */
+.profile-dialog {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: auto;
+}
+.profile-dialog.loading .pf { visibility: hidden; }
+.profile-dialog.loading::after {
+  content: 'Cargando...';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #aab0d6;
+  font-size: 16px;
+}
