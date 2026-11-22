@@ -317,23 +317,38 @@ if (btn) {
     return data;
   }
 
-  // Al tocar el botón se usa la sesión ya cargada (uid), sin esperar a getSession().
-  btn.addEventListener('click', async () => {
-    try {
-      if (uid) {
-        paint();
-        pmsg.textContent = '';
-        pdlg.showModal();
-        await loadProfile();
-        pintarPerfil();
-        cargarCanciones();
-        return;
-      }
-      mode = 'login'; msg.textContent = ''; paint();
-      dlg.showModal();
-    } catch (err) {
-      alert('Error: ' + (err?.message || err));
+  // ── Perfil como página propia (#perfil) con carga visible ──
+  function abrirPerfil() {
+    paint();
+    pmsg.textContent = '';
+    pdlg.classList.add('loading');
+    if (!pdlg.open) pdlg.showModal();
+    loadProfile()
+      .then(() => { pintarPerfil(); return cargarCanciones(); })
+      .catch((err) => { pmsg.textContent = 'Error al cargar: ' + (err?.message || err); })
+      .finally(() => pdlg.classList.remove('loading'));
+  }
+
+  // Tocar el botón con sesión lleva a #perfil; sin sesión, abre el formulario de entrar.
+  btn.addEventListener('click', () => {
+    if (uid) {
+      location.hash = 'perfil';
+      return;
     }
+    mode = 'login'; msg.textContent = ''; paint();
+    dlg.showModal();
+  });
+
+  // El botón de atrás del celular cierra el perfil y vuelve a la galería.
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#perfil') {
+      if (uid) abrirPerfil();
+    } else if (pdlg.open) {
+      pdlg.close();
+    }
+  });
+  pdlg.addEventListener('close', () => {
+    if (location.hash === '#perfil') history.back();
   });
 
   sb.auth.onAuthStateChange(async (_event, session) => {
