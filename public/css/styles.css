@@ -1659,3 +1659,15 @@ Añadido descargador de Instagram
   color: #aab0d6;
   font-size: 16px;
 }
+
+
+/* Ajustes como página completa (#ajustes) */
+#settings {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
