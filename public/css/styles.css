@@ -1671,3 +1671,16 @@ Añadido descargador de Instagram
   border: 0;
   border-radius: 0;
 }
+
+
+/* Ajustes por secciones: menú (celular: desplegable; PC: lateral) */
+.settings-layout { display: block; }
+.settings-menu { display: none; border-bottom: 1px solid var(--line); padding: 8px; background: var(--card, #13172b); }
+.settings-menu.open { display: block; }
+.settings-menu a { display: block; padding: 12px 14px; border-radius: 10px; color: var(--muted, #aab0d6); text-decoration: none; font-size: 15px; }
+.settings-menu a.on { background: var(--accent, #5b6cf0); color: #fff; }
+@media (min-width: 768px) {
+  .settings-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 0; }
+  .settings-menu { display: block; border-bottom: 0; border-right: 1px solid var(--line); padding: 16px 12px; }
+  .settings-menu-toggle { display: none; }
+}
