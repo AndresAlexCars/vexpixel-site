@@ -4,7 +4,7 @@ const safeSet = (key, value) => { try { localStorage.setItem(key, value); } catc
 import { api, ApiError, hasAccessCode, setAccessCode } from './api.js';
 import { ideas, setLanguage, t, tl } from './i18n.js';
 import { applyAppearance, loadDraft, loadSettings, normalize, resetSettings, saveDraft, saveSettings } from './settings.js';
-import { initSettingsPanel } from './settingsPanel.js';
+import { initSettingsPanel } from './settingsPanel.js?v=2';
 import { filterHistory, shortDate, loadFavIds, saveFavIds, onlyFavorites } from './history.js';
 import { getLanguage } from './i18n.js';
 
@@ -807,14 +807,14 @@ for (const opener of document.querySelectorAll('[data-open-settings]')) {
 }
 // Ajustes como página propia (#ajustes): atrás cierra y vuelve a la galería.
 window.addEventListener('hashchange', () => {
-  if (location.hash === '#ajustes') {
+  if (location.hash.startsWith('#ajustes')) {
     if (panel && !els.settingsDialog.open) panel.open();
   } else if (els.settingsDialog.open) {
     els.settingsDialog.close();
   }
 });
 els.settingsDialog.addEventListener('close', () => {
-  if (location.hash === '#ajustes') history.back();
+  if (location.hash.startsWith('#ajustes')) history.back();
 });
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
   if (settings.mode === 'auto') applyAppearance(settings);

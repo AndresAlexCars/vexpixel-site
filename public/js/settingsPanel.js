@@ -150,7 +150,52 @@ export function initSettingsPanel({ dialog, getSettings, update, onReset, onExpo
     // Textos fijos del marco del panel
     dialog.querySelector('.sheet__head h3').textContent = t('settings.title');
     dialog.querySelector('[data-close]').textContent = t('settings.close');
+    mountMenu();
     sync();
+  }
+
+  // ── Ajustes por secciones (#ajustes/<sección>) ──
+  let menuNav = null;
+  let menuSecs = [];
+  const slugify = (txt) => String(txt).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+  function mountMenu() {
+    let layout = body.closest('.settings-layout');
+    if (!layout) {
+      layout = el('div', { class: 'settings-layout' });
+      body.before(layout);
+      layout.append(body);
+    }
+    let nav = layout.querySelector('nav.settings-menu');
+    if (!nav) {
+      nav = el('nav', { class: 'settings-menu', 'aria-label': 'Secciones' });
+      layout.prepend(nav);
+    }
+    const head = dialog.querySelector('.sheet__head');
+    if (head && !head.querySelector('.settings-menu-toggle')) {
+      const toggleBtn = el('button', { type: 'button', class: 'btn btn--text settings-menu-toggle', text: '☰', 'aria-label': 'Secciones' });
+      toggleBtn.addEventListener('click', () => nav.classList.toggle('open'));
+      head.prepend(toggleBtn);
+    }
+    menuSecs = [...body.querySelectorAll(':scope > section.sheet__section')];
+    menuNav = nav;
+    nav.replaceChildren(...menuSecs.map((sec) => {
+      const title = sec.querySelector('h4')?.textContent || '';
+      const slug = slugify(title);
+      sec.dataset.slug = slug;
+      return el('a', { href: '#ajustes/' + slug, 'data-slug': slug, text: title });
+    }));
+    showSection();
+  }
+
+  function showSection() {
+    if (!menuSecs.length) return;
+    const clave = location.hash.startsWith('#ajustes/') ? location.hash.slice('#ajustes/'.length) : '';
+    const target = menuSecs.find((sec) => sec.dataset.slug === clave) || menuSecs[0];
+    menuSecs.forEach((sec) => { sec.hidden = sec !== target; });
+    menuNav.querySelectorAll('a').forEach((a) => a.classList.toggle('on', a.dataset.slug === target.dataset.slug));
+    menuNav.classList.remove('open');
   }
 
   function sync() {
@@ -170,6 +215,8 @@ export function initSettingsPanel({ dialog, getSettings, update, onReset, onExpo
   dialog.addEventListener('click', (event) => {
     if (event.target === dialog) dialog.close();
   });
+
+  window.addEventListener('hashchange', () => { if (dialog.open) showSection(); });
 
   build();
   return {
