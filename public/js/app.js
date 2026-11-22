@@ -803,8 +803,19 @@ for (const swatch of document.querySelectorAll('[data-theme-choice]')) {
   swatch.addEventListener('click', () => updateSettings({ palette: swatch.dataset.themeChoice }));
 }
 for (const opener of document.querySelectorAll('[data-open-settings]')) {
-  opener.addEventListener('click', () => panel?.open());
+  opener.addEventListener('click', () => { location.hash = 'ajustes'; });
 }
+// Ajustes como página propia (#ajustes): atrás cierra y vuelve a la galería.
+window.addEventListener('hashchange', () => {
+  if (location.hash === '#ajustes') {
+    if (panel && !els.settingsDialog.open) panel.open();
+  } else if (els.settingsDialog.open) {
+    els.settingsDialog.close();
+  }
+});
+els.settingsDialog.addEventListener('close', () => {
+  if (location.hash === '#ajustes') history.back();
+});
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
   if (settings.mode === 'auto') applyAppearance(settings);
 });
