@@ -58,31 +58,62 @@ async function conversacion(me, con) {
 
   const box = document.getElementById('ch-msgs');
   const vistos = new Set();
+  let ultimo = new Date(0).toISOString();
+  let timerEscribe = null;
+
+  function quitarEscribiendo() {
+    document.getElementById('ch-typing')?.remove();
+  }
+  function mostrarEscribiendo() {
+    if (!document.getElementById('ch-typing')) {
+      box.insertAdjacentHTML('beforeend', '<div class="ch-b suyo ch-typing" id="ch-typing"><span class="dots"><i></i><i></i><i></i></span></div>');
+      box.scrollTop = box.scrollHeight;
+    }
+    clearTimeout(timerEscribe);
+    timerEscribe = setTimeout(quitarEscribiendo, 2500);
+  }
+
   function agregar(m) {
     if (vistos.has(m.id)) return;
     vistos.add(m.id);
+    if (m.created_at > ultimo) ultimo = m.created_at;
     const propio = m.sender === me;
+    if (!propio) quitarEscribiendo();
     box.insertAdjacentHTML('beforeend', `<div class="ch-b ${propio ? 'mio' : 'suyo'}"><span>${esc(m.body)}</span><small>${hora(m.created_at)}</small></div>`);
     box.scrollTop = box.scrollHeight;
   }
 
+  const filtroPar = `and(sender.eq.${me},receiver.eq.${con}),and(sender.eq.${con},receiver.eq.${me})`;
   const { data: viejos } = await sb.from('messages').select('id,sender,receiver,body,created_at')
-    .or(`and(sender.eq.${me},receiver.eq.${con}),and(sender.eq.${con},receiver.eq.${me})`)
-    .order('created_at', { ascending: true }).limit(200);
+    .or(filtroPar).order('created_at', { ascending: true }).limit(200);
   (viejos || []).forEach(agregar);
   box.scrollTop = box.scrollHeight;
 
-  // Mensajes nuevos en tiempo real
-  sb.channel('chat-' + me)
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver=eq.${me}` },
-      (payload) => { if (payload.new.sender === con) agregar(payload.new); })
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `sender=eq.${me}` },
-      (payload) => { if (payload.new.receiver === con) agregar(payload.new); })
-    .subscribe();
+  // Respaldo: consulta mensajes nuevos cada 2 segundos
+  setInterval(async () => {
+    const { data } = await sb.from('messages').select('id,sender,receiver,body,created_at')
+      .or(filtroPar).gt('created_at', ultimo).order('created_at', { ascending: true }).limit(50);
+    (data || []).forEach(agregar);
+  }, 2000);
+
+  // "Escribiendo..." en tiempo real (sin pasar por la base de datos)
+  const canalEscribe = sb.channel('typing-' + [me, con].sort().join('_'), { config: { broadcast: { self: false } } });
+  canalEscribe.on('broadcast', { event: 'typing' }, ({ payload }) => {
+    if (payload?.from === con) mostrarEscribiendo();
+  }).subscribe();
+
+  const input = document.getElementById('ch-in');
+  let ultimoAviso = 0;
+  input.addEventListener('input', () => {
+    const ahora = Date.now();
+    if (ahora - ultimoAviso > 1500) {
+      canalEscribe.send({ type: 'broadcast', event: 'typing', payload: { from: me } });
+      ultimoAviso = ahora;
+    }
+  });
 
   document.getElementById('ch-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const input = document.getElementById('ch-in');
     const texto = input.value.trim();
     if (!texto) return;
     input.value = '';
