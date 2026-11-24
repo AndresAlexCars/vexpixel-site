@@ -1783,3 +1783,7 @@ body.page-perfil { background: var(--bg, #0b0e1a); color: var(--text, #eef0ff); 
 .pl-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pl-txt small { color: #aab0d6; font-size: 12px; }
 .pp-empty { color: #aab0d6; text-align: center; padding: 30px 0; }
+
+/* Nombre a la derecha de la foto (no tapado) */
+.pv-banner .pv-name { padding-left: 124px; }
+.pv-banner { padding-left: 14px; }
