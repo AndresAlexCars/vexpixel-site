@@ -1818,3 +1818,13 @@ body.page-perfil { background: var(--bg, #0b0e1a); color: var(--text, #eef0ff); 
 .am-acc .pv-btn { flex: none; height: 36px; padding: 0 12px; font-size: 13px; }
 .pv-amigo { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 16px 12px; }
 .pv-amigo .pv-btn { flex: 1; min-width: 150px; }
+
+/* Buscar personas */
+.am-q { width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; border: 1px solid #262c4d;
+  background: #0d1020; color: #eef0ff; font: inherit; font-size: 16px; margin-bottom: 8px; }
+.am-tag { font-size: 12px; color: #aab0d6; padding: 6px 10px; border-radius: 999px; border: 1px solid #3a4170; white-space: nowrap; }
+
+/* Buscar personas */
+.am-q { width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; border: 1px solid #262c4d;
+  background: #0d1020; color: #eef0ff; font: inherit; font-size: 16px; margin-bottom: 8px; }
+.am-tag { font-size: 12px; color: #aab0d6; padding: 6px 10px; border-radius: 999px; border: 1px solid #3a4170; white-space: nowrap; }
