@@ -1771,3 +1771,15 @@ body.page-perfil { background: var(--bg, #0b0e1a); color: var(--text, #eef0ff); 
 .pv-form input, .pv-form select, .pv-form textarea { padding: 10px 12px; border-radius: 10px; border: 1px solid #262c4d;
   background: #0d1020; color: #eef0ff; font: inherit; font-size: 16px; box-sizing: border-box; width: 100%; }
 .pv-msg { margin: 0; min-height: 1.2em; color: #ffb4b4; font-size: 14px; }
+
+/* Lista de perfiles y perfil público */
+.pl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.pl-card { display: grid; gap: 8px; justify-items: center; padding: 14px 10px; border-radius: 16px;
+  background: #13172b; border: 1px solid var(--line, #262c4d); text-decoration: none; color: #eef0ff; text-align: center; }
+.pl-av { width: 84px; height: 84px; border-radius: 16px; overflow: hidden; border: 2px solid #e0a040;
+  background: #232a4d; display: grid; place-items: center; color: #aab0d6; font-size: 12px; }
+.pl-av img { width: 100%; height: 100%; object-fit: cover; }
+.pl-txt { display: grid; gap: 2px; min-width: 0; max-width: 100%; }
+.pl-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-txt small { color: #aab0d6; font-size: 12px; }
+.pp-empty { color: #aab0d6; text-align: center; padding: 30px 0; }
