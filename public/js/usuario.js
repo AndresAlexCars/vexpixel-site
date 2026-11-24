@@ -62,7 +62,7 @@ function pintar(id, p) {
   root.innerHTML = `
     <section class="pv">
       <div class="pv-banner" style="${p.banner_url ? `background-image:url('${esc(p.banner_url)}')` : ''}">
-        <div class="pv-name"><span>✧ ${esc(p.username)} ✧</span> <small class="pv-id">ID ${esc(idCorto)}</small></div>
+        <div class="pv-name"><span>${esc(p.username)}</span> <small class="pv-id">ID ${esc(idCorto)}</small></div>
       </div>
       <div class="pv-row">
         <div class="pv-avatar">${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}<i class="pv-dot"></i></div>

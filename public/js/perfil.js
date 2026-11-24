@@ -8,6 +8,17 @@ const sb = createClient(
             lock: async (_n, _t, fn) => await fn() } },
 );
 
+
+const NOMBRE_OK = /^[A-Za-z0-9_]{3,24}$/;
+const PALABRAS_NO = ['puta', 'puto', 'mierda', 'idiota', 'cabron', 'pendejo', 'verga', 'fuck', 'shit', 'bitch', 'nigger', 'fag'];
+function nombreValido(n) {
+  if (!NOMBRE_OK.test(n)) return 'Usa solo letras, números o _ (de 3 a 24 caracteres).';
+  const b = n.toLowerCase();
+  if (PALABRAS_NO.some((w) => b.includes(w))) return 'Ese nombre no está permitido.';
+  return '';
+}
+const MSG_USADO = 'Este nombre de usuario ya está usado.';
+
 const root = document.getElementById('perfil-root');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const GENERO = { hombre: 'Hombre', mujer: 'Mujer', otro: 'Otro' };
@@ -113,7 +124,7 @@ function pintar(uid, p) {
     <section class="pv">
       <div class="pv-banner" id="pv-banner" style="${p.banner_url ? `background-image:url('${esc(p.banner_url)}')` : ''}">
         <label class="pv-pick">Cambiar banner<input type="file" accept="image/*" id="pf-banner-file" hidden></label>
-        <div class="pv-name"><span>✧ ${esc(nombre)} ✧</span> <small class="pv-id">ID ${esc(idCorto(uid))}</small></div>
+        <div class="pv-name"><span>${esc(nombre)}</span> <small class="pv-id">ID ${esc(idCorto(uid))}</small></div>
       </div>
 
       <div class="pv-row">
@@ -200,13 +211,17 @@ function pintar(uid, p) {
     const f = Object.fromEntries(new FormData(pform));
     const age = Number(f.age);
     if (!age || age < 18) { pmsg.textContent = 'Debes tener 18 años o más.'; return; }
+    const errN = nombreValido(f.username.trim());
+    if (errN) { pmsg.textContent = errN; return; }
+    const { data: ocupado } = await sb.from('profiles').select('id').ilike('username', f.username.trim()).neq('id', uid).limit(1);
+    if (ocupado && ocupado.length) { pmsg.textContent = MSG_USADO; return; }
     try {
       const { error } = await conTiempo(
         sb.from('profiles').update({ username: f.username.trim(), age, gender: f.gender, bio: f.bio.trim() }).eq('id', uid),
         15000, 'guardar');
       if (error) throw error;
       pmsg.textContent = 'Guardado.';
-    } catch (err) { pmsg.textContent = err?.message || 'No se pudo guardar.'; }
+    } catch (err) { pmsg.textContent = err?.code === '23505' ? MSG_USADO : (err?.message || 'No se pudo guardar.'); }
   });
 
   async function subirImagen(bucket, campo, file) {

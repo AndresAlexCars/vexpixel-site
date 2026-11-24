@@ -35,6 +35,17 @@ const lang = () => (document.documentElement.lang || navigator.language || 'es')
 const tx = () => L[lang()];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+
+const NOMBRE_OK = /^[A-Za-z0-9_]{3,24}$/;
+const PALABRAS_NO = ['puta', 'puto', 'mierda', 'idiota', 'cabron', 'pendejo', 'verga', 'fuck', 'shit', 'bitch', 'nigger', 'fag'];
+function nombreValido(n) {
+  if (!NOMBRE_OK.test(n)) return 'Usa solo letras, números o _ (de 3 a 24 caracteres).';
+  const b = n.toLowerCase();
+  if (PALABRAS_NO.some((w) => b.includes(w))) return 'Ese nombre no está permitido.';
+  return '';
+}
+const MSG_USADO = 'Este nombre de usuario ya está usado.';
+
 const btn = document.getElementById('signin-btn');
 const CACHE_KEY = 'vexpixel_perfil';
 const leerCache = () => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch { return null; } };
@@ -169,11 +180,16 @@ if (btn) {
       } else {
         const age = Number(f.age);
         if (!age || age < 18) { msg.textContent = s.ageErr; return; }
+        const nombre = (f.username || '').trim();
+        const errN = nombreValido(nombre);
+        if (errN) { msg.textContent = errN; return; }
+        const { data: ocupado } = await sb.from('profiles').select('id').ilike('username', nombre).limit(1);
+        if (ocupado && ocupado.length) { msg.textContent = MSG_USADO; return; }
         const { data, error } = await sb.auth.signUp({ email: f.email, password: f.password });
         if (error) throw error;
         if (data.session) {
           const { error: upErr } = await sb.from('profiles').update({
-            username: f.username.trim() || f.email.split('@')[0], age, gender: f.gender,
+            username: nombre, age, gender: f.gender,
           }).eq('id', data.user.id);
           if (upErr) throw upErr;
           dlg.close();
@@ -182,7 +198,7 @@ if (btn) {
         }
       }
     } catch (err) {
-      msg.textContent = err?.message ? err.message : s.err;
+      msg.textContent = err?.code === '23505' ? MSG_USADO : (err?.message ? err.message : s.err);
     }
   });
 
@@ -194,6 +210,10 @@ if (btn) {
     pmsg.textContent = '';
     const age = Number(f.age);
     if (!age || age < 18) { pmsg.textContent = s.ageErr; return; }
+    const errN = nombreValido(f.username.trim());
+    if (errN) { pmsg.textContent = errN; return; }
+    const { data: ocupado } = await sb.from('profiles').select('id').ilike('username', f.username.trim()).neq('id', uid).limit(1);
+    if (ocupado && ocupado.length) { pmsg.textContent = MSG_USADO; return; }
     try {
       const username = f.username.trim();
       const { error } = await sb.from('profiles').update({
@@ -205,7 +225,7 @@ if (btn) {
       btn.textContent = username;
       pmsg.textContent = s.saved;
     } catch (err) {
-      pmsg.textContent = err?.message ? err.message : s.err;
+      pmsg.textContent = err?.code === '23505' ? MSG_USADO : (err?.message ? err.message : s.err);
     }
   });
 
