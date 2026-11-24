@@ -85,6 +85,7 @@ function pintar(id, p) {
       </div>
       ${p.bio ? `<p class="pv-bio">${esc(p.bio)}</p>` : ''}
       <div class="pv-amigo" id="pv-amigo"></div>
+      <div class="hz-wrap" id="pv-corazon"></div>
       <h3 class="pv-h">Canciones</h3>
       <div class="pv-songs">
         ${lista.length ? lista.map((c, i) => `
@@ -125,7 +126,41 @@ async function cargarAmistad(id) {
   }));
 }
 
+async function cargarCorazon(id) {
+  const box = document.getElementById('pv-corazon');
+  if (!box) return;
+  const { data: { session } } = await sb.auth.getSession();
+  const me = session?.user.id;
+  const { count } = await sb.from('hearts').select('giver', { count: 'exact', head: true }).eq('receiver', id);
+  const total = count || 0;
+  if (me === id) {
+    box.innerHTML = `<div class="hz-stat"><span class="hz-ico">♥</span> ${total} corazón${total === 1 ? '' : 'es'} recibido${total === 1 ? '' : 's'}</div>`;
+    return;
+  }
+  let dado = false;
+  if (me) {
+    const { data } = await sb.from('hearts').select('giver').eq('giver', me).eq('receiver', id).maybeSingle();
+    dado = !!data;
+  }
+  box.innerHTML = `<button type="button" class="hz-btn${dado ? ' on' : ''}" id="hz-btn" aria-pressed="${dado}">
+      <span class="hz-ico">♥</span><span class="hz-n">${total}</span>
+    </button>`;
+  document.getElementById('hz-btn').addEventListener('click', async () => {
+    if (!me) { location.href = '/?login=1'; return; }
+    const btn = document.getElementById('hz-btn');
+    btn.disabled = true;
+    try {
+      if (dado) await sb.from('hearts').delete().eq('giver', me).eq('receiver', id).throwOnError();
+      else await sb.from('hearts').insert({ giver: me, receiver: id }).throwOnError();
+      cargarCorazon(id);
+    } catch (err) {
+      alert('No se pudo: ' + (err?.message || err));
+      btn.disabled = false;
+    }
+  });
+}
+
 iniciar().then(() => {
   const id = new URLSearchParams(location.search).get('id');
-  if (id) cargarAmistad(id);
+  if (id) { cargarAmistad(id); cargarCorazon(id); }
 });

@@ -158,6 +158,7 @@ function pintar(uid, p) {
       </div>
 
       ${p.bio ? `<p class="pv-bio">${esc(p.bio)}</p>` : ''}
+      <div class="hz-stat" id="pv-hz"></div>
 
       <h3 class="pv-h">Canciones</h3>
       <div id="pv-songs" class="pv-songs"></div>
@@ -260,6 +261,10 @@ function pintar(uid, p) {
   document.getElementById('pf-banner-file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) alSubir('banners', 'banner', f); });
 
   pintarCanciones();
+  sb.from('hearts').select('giver', { count: 'exact', head: true }).eq('receiver', uid).then(({ count }) => {
+    const box = document.getElementById('pv-hz');
+    if (box) box.textContent = `♥ ${count || 0} corazón${count === 1 ? '' : 'es'} recibido${count === 1 ? '' : 's'}`;
+  });
 
   sform.addEventListener('submit', async (e) => {
     e.preventDefault();
