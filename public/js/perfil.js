@@ -1,4 +1,4 @@
-// Página de perfil (/perfil): datos, foto, banner, descripción y canciones.
+// Página de perfil (/perfil): tarjeta de perfil, reproductor y canciones.
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/+esm';
 
 const sb = createClient(
@@ -10,6 +10,7 @@ const sb = createClient(
 
 const root = document.getElementById('perfil-root');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const GENERO = { hombre: 'Hombre', mujer: 'Mujer', otro: 'Otro' };
 
 function conTiempo(promesa, ms, paso) {
   return Promise.race([
@@ -30,80 +31,149 @@ async function reducirImagen(file, maxLado = 1600) {
   return blob || file;
 }
 
-function mostrarSinSesion() {
-  root.innerHTML = `
-    <div class="pp-card">
-      <p>Para ver tu perfil primero inicia sesión.</p>
-      <a class="auth-submit pp-btn" href="/?login=1">Iniciar sesión</a>
-    </div>`;
+// ── Reproductor único: una sola canción a la vez ──
+const audio = new Audio();
+audio.preload = 'metadata';
+let lista = [];
+let actual = -1;
+
+function pintarEstado() {
+  const btn = document.getElementById('pv-toggle');
+  if (btn) btn.textContent = audio.paused ? '▶' : '❚❚';
+  document.querySelectorAll('.pv-song').forEach((el) => {
+    el.classList.toggle('on', Number(el.dataset.i) === actual);
+  });
 }
 
+function cargar(i) {
+  actual = i;
+  audio.src = lista[i].file_url;
+  document.getElementById('pv-title').textContent = lista[i].title;
+  document.getElementById('pv-sub').textContent = `Canción ${i + 1} de ${lista.length}`;
+  pintarEstado();
+}
+
+function reproducir(i) {
+  if (i !== actual) cargar(i);
+  audio.play().catch(() => {});
+  pintarEstado();
+}
+
+function alternar() {
+  if (!lista.length) return;
+  if (actual < 0) return reproducir(0);
+  if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+  pintarEstado();
+}
+
+audio.addEventListener('play', pintarEstado);
+audio.addEventListener('pause', pintarEstado);
+audio.addEventListener('ended', () => {
+  if (actual + 1 < lista.length) reproducir(actual + 1);
+  else pintarEstado();
+});
+audio.addEventListener('timeupdate', () => {
+  const seek = document.getElementById('pv-seek');
+  if (seek && audio.duration) seek.value = String(Math.round((audio.currentTime / audio.duration) * 100));
+});
+
+// ── Carga inicial ──
 async function iniciar() {
   let session = null;
   try {
     const { data } = await conTiempo(sb.auth.getSession(), 10000, 'sesión');
     session = data.session;
-  } catch {
-    session = null;
-  }
-  if (!session) { mostrarSinSesion(); return; }
-  const uid = session.user.id;
-
-  let p = null;
-  try {
-    const { data } = await conTiempo(
-      sb.from('profiles').select('username,age,gender,bio,avatar_url,banner_url').eq('id', uid).single(),
-      10000, 'cargar perfil');
-    p = data;
-  } catch (err) {
-    root.innerHTML = `<p class="pp-error">Error al cargar: ${esc(err?.message || err)}</p>`;
+  } catch { session = null; }
+  if (!session) {
+    root.innerHTML = `<div class="pp-card"><p>Para ver tu perfil primero inicia sesión.</p>
+      <a class="pv-btn pv-btn-main" href="/?login=1">Iniciar sesión</a></div>`;
     return;
   }
+  const uid = session.user.id;
+  try {
+    const [pr, sg] = await Promise.all([
+      conTiempo(sb.from('profiles').select('username,age,gender,bio,avatar_url,banner_url').eq('id', uid).single(), 10000, 'perfil'),
+      conTiempo(sb.from('songs').select('id,title,file_url').eq('user_id', uid).order('created_at', { ascending: false }), 10000, 'canciones'),
+    ]);
+    if (pr.error) throw pr.error;
+    lista = sg.data || [];
+    pintar(uid, pr.data || {});
+  } catch (err) {
+    root.innerHTML = `<p class="pp-error">Error al cargar: ${esc(err?.message || err)}</p>`;
+  }
+}
 
-  pintar(uid, p || {});
+function idCorto(uid) {
+  return '#' + uid.replace(/-/g, '').slice(0, 8).toUpperCase();
 }
 
 function pintar(uid, p) {
+  const nombre = p.username || 'Usuario';
   root.innerHTML = `
-    <section class="pf pp-card">
-      <div class="pf-banner" id="pf-banner" style="${p.banner_url ? `background-image:url('${esc(p.banner_url)}')` : ''}">
-        <label class="pf-pick">Banner<input type="file" accept="image/*" id="pf-banner-file" hidden></label>
+    <section class="pv">
+      <div class="pv-banner" id="pv-banner" style="${p.banner_url ? `background-image:url('${esc(p.banner_url)}')` : ''}">
+        <label class="pv-pick">Cambiar banner<input type="file" accept="image/*" id="pf-banner-file" hidden></label>
+        <div class="pv-name"><span>✧ ${esc(nombre)} ✧</span> <small class="pv-id">ID ${esc(idCorto(uid))}</small></div>
       </div>
-      <div class="pf-head">
-        <label class="pf-avatar" id="pf-avatar">
-          ${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : 'Foto de perfil'}
+
+      <div class="pv-row">
+        <label class="pv-avatar" id="pf-avatar">
+          ${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}
           <input type="file" accept="image/*" id="pf-avatar-file" hidden>
+          <i class="pv-dot"></i>
         </label>
+        <div class="pv-info">
+          <div class="pv-online"><i></i> Online</div>
+          <div class="pv-tags">
+            ${p.gender ? `<span class="tag tag-g">${esc(GENERO[p.gender] || p.gender)}</span>` : ''}
+            ${p.age ? `<span class="tag tag-a">${esc(p.age)}</span>` : ''}
+            <span class="tag">Español</span>
+          </div>
+        </div>
       </div>
 
-      <form id="profile-form" class="auth-form">
-        <label>Nombre de usuario<input name="username" maxlength="24" required value="${esc(p.username)}"></label>
-        <label>Edad<input name="age" type="number" min="18" max="120" required value="${esc(p.age)}"></label>
-        <label>Género
-          <select name="gender">
-            <option value="hombre" ${p.gender === 'hombre' ? 'selected' : ''}>Hombre</option>
-            <option value="mujer" ${p.gender === 'mujer' ? 'selected' : ''}>Mujer</option>
-            <option value="otro" ${p.gender === 'otro' ? 'selected' : ''}>Otro</option>
-          </select>
-        </label>
-        <label>Descripción<textarea name="bio" maxlength="300" rows="3">${esc(p.bio)}</textarea></label>
-        <p class="auth-msg" id="pmsg" role="status"></p>
-        <div class="auth-actions">
-          <button type="button" class="auth-signout" id="signout">Cerrar sesión</button>
-          <button type="submit" class="auth-submit">Guardar</button>
+      <div class="pv-player">
+        <button type="button" id="pv-toggle" class="pv-play" aria-label="Reproducir">▶</button>
+        <div class="pv-meta">
+          <span id="pv-title">${lista.length ? 'Toca una canción' : 'Sin canciones'}</span>
+          <small id="pv-sub">${lista.length ? `${lista.length} canción(es)` : 'Agrega una canción abajo'}</small>
+          <input type="range" id="pv-seek" min="0" max="100" value="0" aria-label="Progreso">
         </div>
-      </form>
+      </div>
 
-      <div class="pf-songs">
-        <h3>Canciones</h3>
-        <div id="pf-song-list"></div>
-        <form id="song-form" class="auth-form">
+      <div class="pv-actions">
+        <button type="button" class="pv-btn pv-btn-main" id="pv-edit-go">Editar perfil</button>
+        <button type="button" class="pv-btn pv-btn-danger" id="pv-signout">Cerrar sesión</button>
+      </div>
+
+      ${p.bio ? `<p class="pv-bio">${esc(p.bio)}</p>` : ''}
+
+      <h3 class="pv-h">Canciones</h3>
+      <div id="pv-songs" class="pv-songs"></div>
+
+      <details class="pv-edit" id="pv-edit-box">
+        <summary>Editar perfil y subir canción</summary>
+        <form id="profile-form" class="pv-form">
+          <label>Nombre de usuario<input name="username" maxlength="24" required value="${esc(p.username)}"></label>
+          <label>Edad<input name="age" type="number" min="18" max="120" required value="${esc(p.age)}"></label>
+          <label>Género
+            <select name="gender">
+              <option value="hombre" ${p.gender === 'hombre' ? 'selected' : ''}>Hombre</option>
+              <option value="mujer" ${p.gender === 'mujer' ? 'selected' : ''}>Mujer</option>
+              <option value="otro" ${p.gender === 'otro' ? 'selected' : ''}>Otro</option>
+            </select>
+          </label>
+          <label>Descripción<textarea name="bio" maxlength="300" rows="3">${esc(p.bio)}</textarea></label>
+          <p class="pv-msg" id="pmsg" role="status"></p>
+          <button type="submit" class="pv-btn pv-btn-main">Guardar</button>
+        </form>
+        <form id="song-form" class="pv-form">
           <label>Título de la canción<input name="title" maxlength="60" required></label>
           <label>Archivo de audio<input name="file" type="file" accept="audio/*" required></label>
-          <p class="auth-msg" id="smsg" role="status"></p>
-          <button type="submit" class="auth-submit">Agregar canción</button>
+          <p class="pv-msg" id="smsg" role="status"></p>
+          <button type="submit" class="pv-btn pv-btn-main">Agregar canción</button>
         </form>
-      </div>
+      </details>
     </section>`;
 
   const pmsg = document.getElementById('pmsg');
@@ -111,7 +181,15 @@ function pintar(uid, p) {
   const pform = document.getElementById('profile-form');
   const sform = document.getElementById('song-form');
 
-  document.getElementById('signout').addEventListener('click', async () => {
+  document.getElementById('pv-toggle').addEventListener('click', alternar);
+  document.getElementById('pv-edit-go').addEventListener('click', () => {
+    document.getElementById('pv-edit-box').open = true;
+    document.getElementById('pv-edit-box').scrollIntoView({ behavior: 'smooth' });
+  });
+  document.getElementById('pv-seek').addEventListener('input', (e) => {
+    if (audio.duration) audio.currentTime = (Number(e.target.value) / 100) * audio.duration;
+  });
+  document.getElementById('pv-signout').addEventListener('click', async () => {
     await sb.auth.signOut();
     location.href = '/';
   });
@@ -128,9 +206,7 @@ function pintar(uid, p) {
         15000, 'guardar');
       if (error) throw error;
       pmsg.textContent = 'Guardado.';
-    } catch (err) {
-      pmsg.textContent = err?.message || 'No se pudo guardar.';
-    }
+    } catch (err) { pmsg.textContent = err?.message || 'No se pudo guardar.'; }
   });
 
   async function subirImagen(bucket, campo, file) {
@@ -154,10 +230,10 @@ function pintar(uid, p) {
     try {
       const url = await subirImagen(bucket, campo, file);
       if (campo === 'avatar') {
-        document.getElementById('pf-avatar').innerHTML = `<img alt="" src="${esc(url)}"><input type="file" accept="image/*" id="pf-avatar-file" hidden>`;
-        bindAvatar();
+        document.getElementById('pf-avatar').innerHTML = `<img alt="" src="${esc(url)}"><input type="file" accept="image/*" id="pf-avatar-file" hidden><i class="pv-dot"></i>`;
+        document.getElementById('pf-avatar-file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) alSubir('avatars', 'avatar', f); });
       } else {
-        document.getElementById('pf-banner').style.backgroundImage = `url('${esc(url)}')`;
+        document.getElementById('pv-banner').style.backgroundImage = `url('${esc(url)}')`;
       }
       pmsg.textContent = 'Guardado.';
     } catch (err) {
@@ -165,39 +241,10 @@ function pintar(uid, p) {
       alert('Error al subir: ' + (err?.message || err));
     }
   }
+  document.getElementById('pf-avatar-file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) alSubir('avatars', 'avatar', f); });
+  document.getElementById('pf-banner-file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) alSubir('banners', 'banner', f); });
 
-  function bindAvatar() {
-    document.getElementById('pf-avatar-file')?.addEventListener('change', (e) => {
-      const file = e.target.files[0]; if (file) alSubir('avatars', 'avatar', file);
-    });
-  }
-  bindAvatar();
-  document.getElementById('pf-banner-file').addEventListener('change', (e) => {
-    const file = e.target.files[0]; if (file) alSubir('banners', 'banner', file);
-  });
-
-  async function cargarCanciones() {
-    const list = document.getElementById('pf-song-list');
-    const { data, error } = await conTiempo(
-      sb.from('songs').select('id,title,file_url').eq('user_id', uid).order('created_at', { ascending: false }),
-      10000, 'cargar canciones');
-    if (error) { list.textContent = error.message; return; }
-    if (!data.length) { list.innerHTML = '<p class="pf-empty">Aún no hay canciones.</p>'; return; }
-    list.innerHTML = data.map((c) => `
-      <div class="pf-song">
-        <strong>${esc(c.title)}</strong>
-        <audio controls preload="none" src="${esc(c.file_url)}"></audio>
-        <button type="button" class="auth-cancel" data-del="${esc(c.id)}" data-url="${esc(c.file_url)}">Borrar</button>
-      </div>`).join('');
-    list.querySelectorAll('[data-del]').forEach((b) => b.addEventListener('click', async () => {
-      try {
-        const path = decodeURIComponent(new URL(b.dataset.url).pathname.split('/canciones/')[1] || '');
-        if (path) await sb.storage.from('canciones').remove([path]);
-        await sb.from('songs').delete().eq('id', b.dataset.del);
-        cargarCanciones();
-      } catch (err) { alert('No se pudo borrar: ' + (err?.message || err)); }
-    }));
-  }
+  pintarCanciones();
 
   sform.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -215,13 +262,44 @@ function pintar(uid, p) {
       if (error) throw error;
       sform.reset();
       smsg.textContent = '';
-      cargarCanciones();
-    } catch (err) {
-      smsg.textContent = err?.message || 'No se pudo subir.';
-    }
+      await recargarCanciones(uid);
+    } catch (err) { smsg.textContent = err?.message || 'No se pudo subir.'; }
   });
 
-  cargarCanciones();
+  async function recargarCanciones(id) {
+    const { data } = await sb.from('songs').select('id,title,file_url').eq('user_id', id).order('created_at', { ascending: false });
+    lista = data || [];
+    actual = -1;
+    audio.pause();
+    pintarCanciones();
+    const t = document.getElementById('pv-title');
+    t.textContent = lista.length ? 'Toca una canción' : 'Sin canciones';
+    document.getElementById('pv-sub').textContent = lista.length ? `${lista.length} canción(es)` : 'Agrega una canción abajo';
+  }
+
+  function pintarCanciones() {
+    const box = document.getElementById('pv-songs');
+    if (!lista.length) { box.innerHTML = '<p class="pv-empty">Aún no hay canciones.</p>'; return; }
+    box.innerHTML = lista.map((c, i) => `
+      <div class="pv-song-row">
+        <button type="button" class="pv-song" data-i="${i}">
+          <span class="num">${i + 1}</span>
+          <span class="t">${esc(c.title)}</span>
+          <span class="ico">▶</span>
+        </button>
+        <button type="button" class="pv-del" data-del="${esc(c.id)}" data-url="${esc(c.file_url)}">Borrar</button>
+      </div>`).join('');
+    box.querySelectorAll('.pv-song').forEach((b) => b.addEventListener('click', () => reproducir(Number(b.dataset.i))));
+    box.querySelectorAll('.pv-del').forEach((b) => b.addEventListener('click', async () => {
+      try {
+        const path = decodeURIComponent(new URL(b.dataset.url).pathname.split('/canciones/')[1] || '');
+        if (path) await sb.storage.from('canciones').remove([path]);
+        await sb.from('songs').delete().eq('id', b.dataset.del);
+        await recargarCanciones(uid);
+      } catch (err) { alert('No se pudo borrar: ' + (err?.message || err)); }
+    }));
+    pintarEstado();
+  }
 }
 
 iniciar();
