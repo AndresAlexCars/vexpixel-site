@@ -1828,3 +1828,17 @@ body.page-perfil { background: var(--bg, #0b0e1a); color: var(--text, #eef0ff); 
 .am-q { width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; border: 1px solid #262c4d;
   background: #0d1020; color: #eef0ff; font: inherit; font-size: 16px; margin-bottom: 8px; }
 .am-tag { font-size: 12px; color: #aab0d6; padding: 6px 10px; border-radius: 999px; border: 1px solid #3a4170; white-space: nowrap; }
+
+
+/* Corazones */
+.hz-wrap { padding: 0 16px 12px; }
+.hz-btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid #3a4170; background: #1a1f38; color: #cfd3f5; font: inherit; font-weight: 600; cursor: pointer;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease; }
+.hz-btn:active { transform: scale(.94); }
+.hz-btn:disabled { opacity: .6; cursor: default; }
+.hz-btn .hz-ico { font-size: 18px; line-height: 1; color: #ff6f91; transition: transform .25s ease; }
+.hz-btn.on { background: linear-gradient(135deg, #ff6f91, #ff9a4d); border-color: transparent; color: #fff; }
+.hz-btn.on .hz-ico { color: #fff; transform: scale(1.15); }
+.hz-stat { padding: 0 16px 12px; color: #cfd3f5; font-size: 14px; }
+.hz-stat .hz-ico { color: #ff6f91; }
