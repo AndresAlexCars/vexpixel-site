@@ -4,7 +4,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const sb = createClient(
   'https://mimwoqvbssiexkstvqbo.supabase.co',
   'sb_publishable_JRWU4J2TrpVF5eahhVBxaA_8JB4633R',
-  { auth: { persistSession: false } },
+  { auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage,
+            lock: async (_n, _t, fn) => await fn() } },
 );
 const root = document.getElementById('usuario-root');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -83,6 +84,7 @@ function pintar(id, p) {
         </div>
       </div>
       ${p.bio ? `<p class="pv-bio">${esc(p.bio)}</p>` : ''}
+      <div class="pv-amigo" id="pv-amigo"></div>
       <h3 class="pv-h">Canciones</h3>
       <div class="pv-songs">
         ${lista.length ? lista.map((c, i) => `
@@ -95,4 +97,35 @@ function pintar(id, p) {
   document.querySelectorAll('.pv-song').forEach((b) => b.addEventListener('click', () => reproducir(Number(b.dataset.i))));
 }
 
-iniciar();
+async function cargarAmistad(id) {
+  const box = document.getElementById('pv-amigo');
+  if (!box) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    box.innerHTML = '<a class="pv-btn pv-btn-main" href="/?login=1">Inicia sesión para agregar amigos</a>';
+    return;
+  }
+  const me = session.user.id;
+  if (me === id) { box.innerHTML = '<a class="pv-btn" href="/amigos">Ver mis amigos</a>'; return; }
+  const { data: f } = await sb.from('friendships').select('id,requester,addressee,status')
+    .or(`and(requester.eq.${me},addressee.eq.${id}),and(requester.eq.${id},addressee.eq.${me})`).maybeSingle();
+  if (!f) box.innerHTML = '<button type="button" class="pv-btn pv-btn-main" data-act="add">Agregar amigo</button>';
+  else if (f.status === 'accepted') box.innerHTML = '<button type="button" class="pv-btn" data-act="remove">Amigos ✓ · Quitar</button>';
+  else if (f.requester === me) box.innerHTML = '<button type="button" class="pv-btn" data-act="cancel">Solicitud enviada · Cancelar</button>';
+  else box.innerHTML = '<button type="button" class="pv-btn pv-btn-main" data-act="accept">Aceptar solicitud</button> <button type="button" class="pv-btn" data-act="reject">Rechazar</button>';
+
+  box.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', async () => {
+    try {
+      const act = b.dataset.act;
+      if (act === 'add') await sb.from('friendships').insert({ requester: me, addressee: id }).throwOnError();
+      else if (act === 'accept') await sb.from('friendships').update({ status: 'accepted' }).eq('id', f.id).throwOnError();
+      else await sb.from('friendships').delete().eq('id', f.id).throwOnError();
+      cargarAmistad(id);
+    } catch (err) { alert('No se pudo: ' + (err?.message || err)); }
+  }));
+}
+
+iniciar().then(() => {
+  const id = new URLSearchParams(location.search).get('id');
+  if (id) cargarAmistad(id);
+});

@@ -16,6 +16,7 @@ function pintar() {
     el.classList.toggle('on', on);
     const txt = el.querySelector('.online-text');
     if (txt) txt.textContent = on ? 'En línea' : 'Desconectado';
+    if (txt) txt.classList.toggle('on', on);
   });
 }
 
