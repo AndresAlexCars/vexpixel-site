@@ -1798,3 +1798,23 @@ body.page-perfil { background: var(--bg, #0b0e1a); color: var(--text, #eef0ff); 
 .pl-st { position: absolute; right: 4px; bottom: 4px; width: 13px; height: 13px; border-radius: 50%;
   background: #6b7280; border: 2px solid #13172b; }
 .pl-st.on { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+/* Amigos */
+.am { display: grid; gap: 4px; }
+.am-n { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: #232a4d; color: #cfd3f5; font-size: 12px; }
+.am-list { display: grid; gap: 8px; padding: 0 0 8px; }
+.am-card { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 14px; background: #13172b; border: 1px solid #262c4d; }
+.am-who { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; color: #eef0ff; text-decoration: none; }
+.am-av { position: relative; width: 52px; height: 52px; border-radius: 12px; overflow: hidden; flex: none; background: #232a4d;
+  display: grid; place-items: center; color: #aab0d6; font-size: 11px; border: 2px solid #e0a040; }
+.am-av img { width: 100%; height: 100%; object-fit: cover; }
+.am-st { position: absolute; right: 2px; bottom: 2px; width: 11px; height: 11px; border-radius: 50%; background: #6b7280; border: 2px solid #13172b; }
+.am-st.on { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+.am-txt { display: grid; min-width: 0; }
+.am-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.am-txt small { color: #9ca3af; font-size: 12px; }
+.am-txt small.on { color: #86efac; }
+.am-acc { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.am-acc .pv-btn { flex: none; height: 36px; padding: 0 12px; font-size: 13px; }
+.pv-amigo { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 16px 12px; }
+.pv-amigo .pv-btn { flex: 1; min-width: 150px; }
