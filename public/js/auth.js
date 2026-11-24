@@ -5,7 +5,12 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const SUPABASE_URL = 'https://mimwoqvbssiexkstvqbo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_JRWU4J2TrpVF5eahhVBxaA_8JB4633R';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage },
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    storage: window.localStorage,
+    lock: async (_name, _timeout, fn) => await fn(),
+  },
 });
 
 const L = {
@@ -323,10 +328,17 @@ if (btn) {
     pmsg.textContent = '';
     pdlg.classList.add('loading');
     if (!pdlg.open) pdlg.showModal();
-    loadProfile()
-      .then(() => { pintarPerfil(); return cargarCanciones(); })
-      .catch((err) => { pmsg.textContent = 'Error al cargar: ' + (err?.message || err); })
-      .finally(() => pdlg.classList.remove('loading'));
+    conTiempo(loadProfile(), 15000, 'cargar perfil')
+      .then(() => {
+        pintarPerfil();
+        pdlg.classList.remove('loading');
+        conTiempo(cargarCanciones(), 15000, 'cargar canciones')
+          .catch((err) => { pmsg.textContent = 'Canciones: ' + (err?.message || err); });
+      })
+      .catch((err) => {
+        pdlg.classList.remove('loading');
+        pmsg.textContent = 'Error al cargar: ' + (err?.message || err);
+      });
   }
 
   // Tocar el botón con sesión lleva a #perfil; sin sesión, abre el formulario de entrar.
