@@ -67,7 +67,7 @@ function pintar(id, p) {
       <div class="pv-row">
         <div class="pv-avatar">${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}<i class="pv-dot"></i></div>
         <div class="pv-info">
-          <div class="pv-online"><i></i> Online</div>
+          <div class="pv-online" data-online-uid="${esc(id)}"><i></i><span class="online-text">Desconectado</span></div>
           <div class="pv-tags">
             ${p.gender ? `<span class="tag tag-g">${esc(GENERO[p.gender] || p.gender)}</span>` : ''}
             ${p.age ? `<span class="tag tag-a">${esc(p.age)}</span>` : ''}

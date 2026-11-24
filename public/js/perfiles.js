@@ -20,7 +20,7 @@ async function iniciar() {
   if (!data.length) { lista.innerHTML = '<p class="pp-empty">Todavía no hay perfiles.</p>'; return; }
   lista.innerHTML = data.map((p) => `
     <a class="pl-card" href="/usuario?id=${esc(p.id)}">
-      <div class="pl-av">${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}</div>
+      <div class="pl-av">${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}<i class="pl-st" data-online-uid="${esc(p.id)}"></i></div>
       <div class="pl-txt">
         <strong>${esc(p.username)}</strong>
         <small>${[p.gender && (GENERO[p.gender] || p.gender), p.age].filter(Boolean).map(esc).join(' · ')}</small>

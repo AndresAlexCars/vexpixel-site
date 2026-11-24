@@ -134,7 +134,7 @@ function pintar(uid, p) {
           <i class="pv-dot"></i>
         </label>
         <div class="pv-info">
-          <div class="pv-online"><i></i> Online</div>
+          <div class="pv-online" data-online-uid="${esc(uid)}"><i></i><span class="online-text">Desconectado</span></div>
           <div class="pv-tags">
             ${p.gender ? `<span class="tag tag-g">${esc(GENERO[p.gender] || p.gender)}</span>` : ''}
             ${p.age ? `<span class="tag tag-a">${esc(p.age)}</span>` : ''}
