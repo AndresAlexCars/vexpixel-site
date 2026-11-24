@@ -1787,3 +1787,14 @@ body.page-perfil { background: var(--bg, #0b0e1a); color: var(--text, #eef0ff); 
 /* Nombre a la derecha de la foto (no tapado) */
 .pv-banner .pv-name { padding-left: 124px; }
 .pv-banner { padding-left: 14px; }
+
+
+/* Estado en línea: verde si está conectado, gris si no */
+.pv-online { color: #9ca3af; }
+.pv-online i { background: #6b7280; box-shadow: none; }
+.pv-online.on { color: #86efac; }
+.pv-online.on i { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+.pl-av { position: relative; }
+.pl-st { position: absolute; right: 4px; bottom: 4px; width: 13px; height: 13px; border-radius: 50%;
+  background: #6b7280; border: 2px solid #13172b; }
+.pl-st.on { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
