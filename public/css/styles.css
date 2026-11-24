@@ -1684,3 +1684,18 @@ Añadido descargador de Instagram
   .settings-menu { display: block; border-bottom: 0; border-right: 1px solid var(--line); padding: 16px 12px; }
   .settings-menu-toggle { display: none; }
 }
+
+/* Perfil: recuadro centrado (no ocupa toda la pantalla) */
+.profile-dialog {
+  width: min(92vw, 420px);
+  max-width: min(92vw, 420px);
+  height: auto;
+  max-height: min(86vh, 720px);
+  max-height: min(86dvh, 720px);
+  margin: auto;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: auto;
+}
+.profile-dialog .pf-banner { border-radius: 17px 17px 0 0; }
+.profile-dialog .pf-avatar { position: relative; z-index: 2; }
