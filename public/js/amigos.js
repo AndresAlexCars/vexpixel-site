@@ -15,7 +15,7 @@ function tarjeta(p, acciones = '') {
     <div class="am-card">
       <a class="am-who" href="/usuario?id=${esc(p.id)}">
         <div class="am-av">${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}<i class="am-st" data-online-uid="${esc(p.id)}"></i></div>
-        <div class="am-txt"><strong>${esc(p.username)}</strong>
+        <div class="am-txt" data-online-uid="${esc(p.id)}"><strong>${esc(p.username)}</strong>
           <small class="online-text">Desconectado</small></div>
       </a>
       <div class="am-acc">${acciones}</div>

@@ -48,7 +48,7 @@ async function conversacion(me, con) {
     <div class="ch-head">
       <a href="/chat" class="back-link">←</a>
       <div class="am-av sm">${p.avatar_url ? `<img alt="" src="${esc(p.avatar_url)}">` : '<span>Foto</span>'}<i class="am-st" data-online-uid="${esc(con)}"></i></div>
-      <div class="am-txt"><strong>${esc(p.username)}</strong><small class="online-text">Desconectado</small></div>
+      <div class="am-txt" data-online-uid="${esc(con)}"><strong>${esc(p.username)}</strong><small class="online-text">Desconectado</small></div>
     </div>
     <div class="ch-msgs" id="ch-msgs"></div>
     <form class="ch-form" id="ch-form">
