@@ -36,7 +36,16 @@ const tx = () => L[lang()];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const btn = document.getElementById('signin-btn');
+const CACHE_KEY = 'vexpixel_perfil';
+const leerCache = () => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch { return null; } };
+const guardarCache = (p) => { try { localStorage.setItem(CACHE_KEY, JSON.stringify(p)); } catch {} };
+const borrarCache = () => { try { localStorage.removeItem(CACHE_KEY); } catch {} };
+const hayTokenGuardado = () => { try { return Object.keys(localStorage).some((k) => k.startsWith('sb-') && k.endsWith('-auth-token')); } catch { return false; } };
+
 if (btn) {
+  // Mostrar el nombre guardado al instante, sin esperar al servidor
+  if (hayTokenGuardado() && leerCache()?.username) btn.textContent = leerCache().username;
+
   // ── Diálogo de entrar / crear cuenta ──
   const dlg = document.createElement('dialog');
   dlg.className = 'auth-dialog';
@@ -192,6 +201,7 @@ if (btn) {
       }).eq('id', uid);
       if (error) throw error;
       profile = { ...profile, username, age, gender: f.gender, bio: f.bio.trim() };
+      guardarCache({ ...profile, uid });
       btn.textContent = username;
       pmsg.textContent = s.saved;
     } catch (err) {
@@ -319,6 +329,7 @@ if (btn) {
     const { data } = await sb.from('profiles')
       .select('username,age,gender,bio,avatar_url,banner_url').eq('id', uid).single();
     profile = data;
+    if (data) guardarCache({ ...data, uid });
     return data;
   }
 
@@ -366,11 +377,18 @@ if (btn) {
   sb.auth.onAuthStateChange(async (_event, session) => {
     if (session) {
       uid = session.user.id;
-      const p = await loadProfile();
-      btn.textContent = p?.username || tx().signout;
+      const cache = leerCache();
+      btn.textContent = cache?.uid === uid && cache?.username ? cache.username : tx().signout;
+      try {
+        const p = await conTiempo(loadProfile(), 10000, 'cargar perfil');
+        btn.textContent = p?.username || btn.textContent;
+      } catch {
+        // Si el servidor tarda, se queda el nombre guardado
+      }
     } else {
       uid = null;
       profile = null;
+      borrarCache();
       btn.textContent = tx().signin;
     }
   });
