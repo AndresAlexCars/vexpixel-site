@@ -355,7 +355,7 @@ if (btn) {
   // Tocar el botón con sesión lleva a #perfil; sin sesión, abre el formulario de entrar.
   btn.addEventListener('click', () => {
     if (uid) {
-      location.hash = 'perfil';
+      location.href = '/perfil';
       return;
     }
     mode = 'login'; msg.textContent = ''; paint();
@@ -373,6 +373,12 @@ if (btn) {
   pdlg.addEventListener('close', () => {
     if (location.hash === '#perfil') history.back();
   });
+
+  // Desde /perfil (sin sesión) se abre el formulario de entrar
+  if (new URLSearchParams(location.search).get('login') && !uid) {
+    mode = 'login'; paint();
+    dlg.showModal();
+  }
 
   sb.auth.onAuthStateChange(async (_event, session) => {
     if (session) {
